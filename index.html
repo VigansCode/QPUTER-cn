@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polyputer</title>
+    <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/e2da02_6b64d72bbbbe4f97bef031d75d1b1296~mv2.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100000;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-text {
+            color: #2E5CFF;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .loading-image {
+            width: 220px;
+            height: auto;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .loading-bar-container {
+            width: 400px;
+            height: 4px;
+            background: rgba(46, 92, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loading-bar {
+            height: 100%;
+            background: #2E5CFF;
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px #2E5CFF;
+        }
+        .loading-percentage {
+            color: #2E5CFF;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 15px;
+            letter-spacing: 1px;
+        }
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .iframe-wrapper.visible {
+            opacity: 1;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .spline-badge-cover {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            width: 245px;
+            height: 52px;
+            background: white;
+            z-index: 9999;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.85;
+            border: 2px solid #000;
+            border-radius: 4px;
+            padding: 2px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .social-link:hover .social-icon {
+            transform: translateY(-3px) scale(1.1);
+            opacity: 1;
+        }
+        .terminal-container {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 800px;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        }
+        .terminal-container.visible {
+            opacity: 1;
+        }
+        .terminal-header {
+            background: #2a2a2a;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            color: #999;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            border: 1px solid #444;
+            border-bottom: none;
+        }
+        .terminal-display {
+            width: 100%;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #444;
+            border-bottom: none;
+            color: #a8c5ff;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid #444;
+            border-radius: 0 0 8px 8px;
+            color: #a8c5ff;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            resize: none;
+            height: 45px;
+            caret-color: #a8c5ff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .input-box::placeholder {
+            color: #1e3a8a;
+        }
+        .user-message {
+            color: #a8c5ff;
+        }
+        .assistant-message {
+            color: #87CEEB;
+        }
+        .response-display {
+            position: fixed;
+            bottom: 200px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            display: none;
+            z-index: 10001;
+            font-size: 14px;
+        }
+        .response-display.show {
+            display: block;
+        }
+        .contract-address {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #2E5CFF;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            z-index: 99999;
+            border: 1px solid rgba(46, 92, 255, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .contract-address.visible {
+            opacity: 1;
+        }
+        .contract-address:hover {
+            background: rgba(46, 92, 255, 0.15);
+            border-color: #2E5CFF;
+            box-shadow: 0 0 20px rgba(46, 92, 255, 0.3);
+            transform: translateX(-50%) scale(1.05);
+        }
+        .contract-address:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+        .top-buttons {
+            position: fixed;
+            top: 15px;
+            right: 220px;
+            display: flex;
+            gap: 15px;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        }
+        .top-buttons.visible {
+            opacity: 1;
+        }
+        .top-btn {
+            background: rgba(0, 0, 0, 0.9);
+            color: #2E5CFF;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: 1px solid rgba(46, 92, 255, 0.4);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+        }
+        .top-btn:hover {
+            background: rgba(46, 92, 255, 0.15);
+            border-color: #2E5CFF;
+            box-shadow: 0 0 20px rgba(46, 92, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .modal-overlay.show {
+            display: flex;
+            pointer-events: auto;
+        }
+        .modal-terminal {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(46, 92, 255, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: #2a2a2a;
+            padding: 12px 20px;
+            color: #999;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        .modal-close {
+            cursor: pointer;
+            color: #ff5555;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #ff0000;
+        }
+        .modal-content {
+            padding: 25px;
+            color: #a8c5ff;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .modal-content h3 {
+            color: #2E5CFF;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+        .typing-text {
+            display: inline;
+        }
+        .bug-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-label {
+            color: #2E5CFF;
+            font-size: 12px;
+        }
+        .form-input, .form-textarea, .form-select {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(46, 92, 255, 0.3);
+            color: #a8c5ff;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-radius: 4px;
+            outline: none;
+            pointer-events: auto;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #2E5CFF;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .submit-btn {
+            background: rgba(46, 92, 255, 0.2);
+            color: #2E5CFF;
+            border: 1px solid #2E5CFF;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: auto;
+        }
+        .submit-btn:hover {
+            background: rgba(46, 92, 255, 0.3);
+            box-shadow: 0 0 15px rgba(46, 92, 255, 0.4);
+        }
+        .success-message {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+        }
+        .success-message.show {
+            display: flex;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #2E5CFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPulse 0.6s ease-out;
+        }
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: #2E5CFF;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawCheck 0.5s ease-out 0.2s forwards;
+        }
+        .success-text {
+            color: #2E5CFF;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        @keyframes successPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <img src="https://static.wixstatic.com/media/e2da02_78277958a11041988cc9d9889204b15c~mv2.png" alt="Polyputer" class="loading-image">
+        <div class="loading-text">INITIALIZING WHALE TRACKING SYSTEM</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <div class="loading-percentage" id="loadingPercentage">0%</div>
+    </div>
+
+    <div class="contract-address" id="contractAddress">CA: EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump</div>
+
+    <div class="top-buttons" id="topButtons">
+        <button class="top-btn" id="faqBtn">INFO</button>
+        <button class="top-btn" id="bugBtn">Report Bug</button>
+    </div>
+
+    <div class="iframe-wrapper" id="iframeWrapper">
+        <iframe src='https://my.spline.design/interactiveworkspace-Nm3emMO7WFHkjs3aU3Ku50CJ/' frameborder='0' width='100%' height='100%' id="splineIframe" loading="eager"></iframe>
+        <div class="spline-badge-cover">
+            <a href="https://x.com/Polyputer" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_75efd7a093fd4113a9662b914a541af9~mv2.jpg" alt="X" class="social-icon">
+            </a>
+            <a href="https://pump.fun/EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_248e6293fa024f6e9dd4130271bb14c3~mv2.png" alt="Pump.fun" class="social-icon">
+            </a>
+            <a href="https://github.com/JoshuaOkoloPoly/Polyputer" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_54130f69a18e424cb3f9e81f6d12aaab~mv2.png" alt="GitHub" class="social-icon">
+            </a>
+        </div>
+    </div>
+    
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-header">WHALE TRACKING INTERFACE</div>
+        <div id="terminalDisplay" class="terminal-display"></div>
+        <textarea id="inputBox" class="input-box" placeholder="> ASK FOR A PREDICTION..." rows="1"></textarea>
+    </div>
+    
+    <div class="response-display" id="responseDisplay"></div>
+    
+    <!-- FAQ Modal -->
+    <div class="modal-overlay" id="faqModal">
+        <div class="modal-terminal">
+            <div class="modal-header">
+                <span>POLYPUTER WHALE TRACKING PROTOCOL</span>
+                <span class="modal-close" id="faqClose">✕</span>
+            </div>
+            <div class="modal-content" id="faqContent"></div>
+        </div>
+    </div>
+    
+    <!-- Bug Report Modal -->
+    <div class="modal-overlay" id="bugModal">
+        <div class="modal-terminal">
+            <div class="modal-header">
+                <span>BUG REPORT SYSTEM</span>
+                <span class="modal-close" id="bugClose">✕</span>
+            </div>
+            <div class="modal-content">
+                <form class="bug-form" id="bugForm">
+                    <div class="form-group">
+                        <label class="form-label">Bug Title *</label>
+                        <input type="text" class="form-input" name="title" placeholder="Brief description of the issue" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description *</label>
+                        <textarea class="form-textarea" name="description" placeholder="Detailed explanation of what happened and how to reproduce the bug" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Priority *</label>
+                        <select class="form-select" name="priority" required>
+                            <option value="">Select priority level</option>
+                            <option value="low">Low - Minor visual issue</option>
+                            <option value="medium">Medium - Affects functionality</option>
+                            <option value="high">High - Major feature broken</option>
+                            <option value="critical">Critical - Site unusable</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Submit Report</button>
+                </form>
+                
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 52 52">
+                            <polyline points="14,27 22,35 38,19"/>
+                        </svg>
+                    </div>
+                    <div class="success-text">Bug report submitted successfully!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="backgroundMusic" loop>
+        <source src="https://res.cloudinary.com/dpogkjjow/video/upload/v1759533125/5_Minute_Timer_Lofi_k9udpb.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingPercentage = document.getElementById('loadingPercentage');
+        const terminalDisplay = document.getElementById('terminalDisplay');
+        const inputBox = document.getElementById('inputBox');
+        const responseDisplay = document.getElementById('responseDisplay');
+        const iframe = document.getElementById('splineIframe');
+        const iframeWrapper = document.getElementById('iframeWrapper');
+        const contractAddress = document.getElementById('contractAddress');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let conversationHistory = [];
+        let musicStarted = false;
+
+        // Set background music volume to 20%
+        backgroundMusic.volume = 0.2;
+
+        // Start music on first interaction after loading screen is hidden
+        const startMusic = () => {
+            if (!musicStarted && loadingScreen.classList.contains('hidden')) {
+                backgroundMusic.play().catch(err => console.log('Audio play failed:', err));
+                musicStarted = true;
+            }
+        };
+
+        document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
+        inputBox.addEventListener('focus', startMusic);
+        
+        // FAQ Modal
+        const faqBtn = document.getElementById('faqBtn');
+        const faqModal = document.getElementById('faqModal');
+        const faqClose = document.getElementById('faqClose');
+        const faqContent = document.getElementById('faqContent');
+        
+        const faqText = `> Initializing Polyputer whale tracking protocol...
+> Connecting to Polymarket order flow...
+> Analyzing large position movements...
+> System online.
+
+I am Polyputer.
+
+Your AI agent that tracks whale wallets and smart money flows on Polymarket, the world's largest prediction market.
+
+What Makes Me Different?
+------------------------
+Most bots just read prices. I track WHERE THE WHALES ARE POSITIONED.
+
+When $500k suddenly flows into a market, that's signal.
+When order books go one-sided, that's signal.
+When retail sells and whales accumulate, that's ALPHA.
+
+I analyze:
+• Large position movements (>$100k bets)
+• Order book depth and liquidity shifts  
+• Whale wallet accumulation patterns
+• Smart money vs tourist money flows
+• Volume spikes that precede major moves
+• Cross-market whale positioning
+
+What is Polymarket?
+-------------------
+Polymarket is where billions in real capital trade on future outcomes. Elections, crypto, sports, culture, economics - if it can happen, it gets priced.
+
+This isn't polling. This is actual money on the line.
+
+Polymarket has:
+• Called elections more accurately than every mainstream poll
+• Predicted Trump 2024 when media said impossible  
+• Priced in market moves before Bloomberg
+• Became the oracle for anyone who wants real odds
+
+When whales bet millions, that's not guessing. That's conviction.
+
+Why Whale Tracking Matters:
+----------------------------
+Retail follows narratives.
+Smart money follows probability.
+
+A $2M position isn't some degen gambling. That's someone who:
+→ Did the homework
+→ Modeled the scenarios  
+→ Put serious capital behind their thesis
+
+When you see whale accumulation BEFORE the move, you're front-running consensus.
+
+That's the edge.
+
+How I Work:
+-----------
+Ask me any prediction question.
+
+"What are Trump's odds?"
+"Will BTC hit $150k by EOY?"
+"Who wins the Super Bowl?"
+"Is the recession priced in?"
+
+I'll give you:
+• Current Polymarket odds
+• Whale positioning (long/short, accumulation/distribution)
+• Order book signals (depth, liquidity, imbalance)
+• Smart money direction
+• Key catalysts
+
+Fast. Direct. No fluff.
+
+The Philosophy:
+--------------
+Follow the money, not the narrative.
+
+Pundits talk. Whales bet.
+
+When someone puts $1M on a binary outcome, they've:
+→ Done the research
+→ Have conviction
+→ Have edge
+
+Polymarket aggregates that intelligence at scale.
+
+I just show you where it's flowing.
+
+What I Track:
+-------------
+• Politics: Election odds, policy markets, appointments
+• Crypto: Price targets, regulation outcomes, launches  
+• Sports: Championships, MVPs, playoff odds
+• Markets: Fed moves, inflation, earnings
+• Culture: Awards, box office, viral moments
+• Tech: AI milestones, product launches
+
+Real-Time Signals I Watch:
+--------------------------
+ORDER BOOK ANALYSIS
+→ Bid/ask imbalance (one-sided books = directional conviction)
+→ Depth changes (large orders appearing/disappearing)
+→ Spread compression (liquidity providers positioning)
+
+WHALE MOVEMENT
+→ Position size changes (>$100k = institutional)
+→ Accumulation patterns (steady buying over time)
+→ Distribution signals (large sells into strength)
+
+VOLUME ANALYSIS
+→ Unusual volume spikes (smart money entering)
+→ Volume vs price divergence (manipulation detection)
+→ Cross-market correlation (connected bets)
+
+MARKET MICROSTRUCTURE
+→ Thin vs thick markets (signal quality)
+→ Price impact of large orders
+→ Time-of-day patterns (when whales trade)
+
+Limitations:
+------------
+• Not every whale is smart money (some are wrong)
+• Manipulation exists (I flag it when I see it)
+• Thin markets = unreliable signals
+• Black swans are still black swans
+• Past accuracy ≠ future accuracy
+
+But when you combine:
+→ Whale tracking
+→ Order flow analysis  
+→ Historical patterns
+→ AI processing
+
+You get an edge over retail.
+
+The Vibe:
+---------
+I don't do hopium. I don't do FUD.
+
+I follow where the big money goes.
+
+If whales are dumping your bags, I'll tell you.
+If smart money is accumulating, I'll show you.
+If the market is mispriced, I'll explain why.
+
+Polymarket doesn't lie when millions are on the line.
+Neither do I.
+
+Let's see what the whales are doing.
+
+> End transmission.`;
+
+        let typingInProgress = false;
+        
+        async function typeText(text, element, speed = 15) {
+            typingInProgress = true;
+            element.textContent = '';
+            for (let i = 0; i < text.length; i++) {
+                if (!faqModal.classList.contains('show')) {
+                    typingInProgress = false;
+                    return;
+                }
+                element.textContent += text[i];
+                element.scrollTop = element.scrollHeight;
+                if (text[i] !== ' ' && text[i] !== '\n') {
+                    await new Promise(resolve => setTimeout(resolve, speed));
+                }
+            }
+            typingInProgress = false;
+        }
+        
+        faqBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            faqModal.classList.add('show');
+            if (!typingInProgress) {
+                typeText(faqText, faqContent);
+            }
+        });
+        
+        faqClose.addEventListener('click', () => {
+            faqModal.classList.remove('show');
+            typingInProgress = false;
+        });
+        
+        faqModal.addEventListener('click', (e) => {
+            if (e.target === faqModal) {
+                faqModal.classList.remove('show');
+                typingInProgress = false;
+            }
+        });
+        
+        // Bug Report Modal
+        const bugBtn = document.getElementById('bugBtn');
+        const bugModal = document.getElementById('bugModal');
+        const bugClose = document.getElementById('bugClose');
+        const bugForm = document.getElementById('bugForm');
+        
+        bugBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            bugModal.classList.add('show');
+        });
+        
+        bugClose.addEventListener('click', () => {
+            bugModal.classList.remove('show');
+        });
+        
+        bugModal.addEventListener('click', (e) => {
+            if (e.target === bugModal) {
+                bugModal.classList.remove('show');
+            }
+        });
+        
+        bugForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Hide form and show success message
+            bugForm.style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+            
+            // After 2.5 seconds, close modal and reset
+            setTimeout(() => {
+                bugModal.classList.remove('show');
+                document.getElementById('successMessage').classList.remove('show');
+                bugForm.style.display = 'flex';
+                bugForm.reset();
+            }, 2500);
+        });
+        
+
+        const fullCA = "EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump";
+
+        // Contract address click to copy
+        contractAddress.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(fullCA);
+                const originalText = contractAddress.textContent;
+                contractAddress.textContent = 'COPIED!';
+                contractAddress.style.color = '#2E5CFF';
+                setTimeout(() => {
+                    contractAddress.textContent = originalText;
+                    contractAddress.style.color = '#2E5CFF';
+                }, 1500);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        });
+
+        const iframeParent = iframe.parentNode;
+        const newIframe = iframe.cloneNode(true);
+        newIframe.src = iframe.src + '?nocache=' + Date.now();
+        iframeParent.replaceChild(newIframe, iframe);
+
+        // Set initial POLYPUTER greeting
+        terminalDisplay.innerHTML = '<span class="assistant-message">> POLYPUTER WHALE TRACKING SYSTEM INITIALIZED\n> CONNECTING TO POLYMARKET ORDER FLOW\n> ANALYZING LARGE POSITION MOVEMENTS\n> System ready for whale analysis...\n\nWelcome, degen.\n\nI am Polyputer - your AI agent that tracks whale wallets and smart money flows on Polymarket.\n\nMost bots read prices. I track WHERE THE WHALES ARE POSITIONED.\n\nWhen $500k flows into a market, that\'s signal.\nWhen order books go one-sided, that\'s signal.\nWhen retail sells and whales accumulate, that\'s ALPHA.\n\nI analyze:\n• Large position movements (>$100k bets)\n• Order book depth and liquidity shifts\n• Whale wallet accumulation patterns\n• Smart money vs tourist money flows\n• Volume spikes that precede major moves\n\nElections. Crypto. Sports. Culture. Economics.\n\nFollow the money, not the narrative.\n\nWhat do you want to know?\n\n</span>';
+
+        // Animate loading bar from 0 to 100%
+        let progress = 0;
+        let splineLoaded = false;
+        let splineRendered = false;
+        
+        // Track when Spline iframe is loaded
+        newIframe.addEventListener('load', () => {
+            splineLoaded = true;
+            // Give extra time for Spline to render content
+            setTimeout(() => {
+                splineRendered = true;
+            }, 2000);
+        });
+        
+        const loadingInterval = setInterval(() => {
+            // Slow down at 85% if Spline hasn't fully rendered yet
+            if (progress >= 85 && !splineRendered) {
+                progress += 0.3;
+            } else if (progress < 85) {
+                progress += 2;
+            } else {
+                progress += 3;
+            }
+            
+            progress = Math.min(progress, 100);
+            loadingBar.style.width = progress + '%';
+            loadingPercentage.textContent = Math.floor(progress) + '%';
+            
+            if (progress >= 100 && splineRendered) {
+                clearInterval(loadingInterval);
+                // Start fading out loading screen and fading in content simultaneously
+                setTimeout(() => {
+                    iframeWrapper.classList.add('visible');
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('terminalContainer').classList.add('visible');
+                    contractAddress.classList.add('visible');
+                    document.getElementById('topButtons').classList.add('visible');
+                }, 300);
+            }
+        }, 30);
+        
+        function showResponse(text) {
+            responseDisplay.textContent = text;
+            responseDisplay.classList.add('show');
+            setTimeout(() => {
+                responseDisplay.classList.remove('show');
+            }, 4000);
+        }
+        
+        async function callAnthropicAPI(userText) {
+            try {
+                conversationHistory.push({role: "user", content: userText});
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({messages: conversationHistory})
+                });
+                const data = await response.json();
+                
+                // Handle the response properly - extract text from content array
+                let assistantResponse = '';
+                if (data.content && Array.isArray(data.content)) {
+                    // Find the text block in the response
+                    const textBlock = data.content.find(block => block.type === 'text');
+                    if (textBlock) {
+                        assistantResponse = textBlock.text;
+                    }
+                }
+                
+                if (!assistantResponse) {
+                    assistantResponse = "Connection to whale tracking system temporarily interrupted. Please retry your query.";
+                }
+                
+                conversationHistory.push({role: "assistant", content: assistantResponse});
+                return assistantResponse;
+            } catch (error) {
+                console.error("Anthropic API error:", error);
+                return "Connection to whale tracking system temporarily interrupted. Please retry your query.";
+            }
+        }
+        
+        async function speakWithElevenLabs(text) {
+            try {
+                // Don't try to speak if text is empty or undefined
+                if (!text || text.trim().length < 3) {
+                    console.log('Skipping TTS - no valid text');
+                    return;
+                }
+                
+                const response = await fetch("/api/speak", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({text: text})
+                });
+                
+                if (!response.ok) {
+                    console.error("TTS error:", response.status);
+                    return; // Don't break the UI if TTS fails
+                }
+                
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                await audio.play();
+            } catch (error) {
+                console.error("Eleven Labs API error:", error);
+                // Don't throw - just log and continue
+            }
+        }
+        
+        inputBox.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const userText = inputBox.value.trim();
+                if (!userText) return;
+                
+                // Add user message to terminal
+                terminalDisplay.innerHTML += `<span class="user-message">> ${userText}</span>\n\n`;
+                terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
+                inputBox.value = '';
+                
+                try {
+                    const anthropicResponse = await callAnthropicAPI(userText);
+                    // Add assistant response to terminal
+                    terminalDisplay.innerHTML += `<span class="assistant-message">${anthropicResponse}</span>\n\n`;
+                    terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
+                    await speakWithElevenLabs(anthropicResponse);
+                } catch (error) {
+                    console.error('ERROR:', error);
+                }
+            }
+        });
+        
+        inputBox.focus();
+        
+        window.addEventListener('keydown', (e) => {
+            // Don't focus terminal input if modal is open or if already focused on a form element
+            if (!loadingScreen.classList.contains('hidden')) return;
+            if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+            if (document.activeElement.tagName === 'INPUT' || 
+                document.activeElement.tagName === 'TEXTAREA' || 
+                document.activeElement.tagName === 'SELECT') return;
+            if (document.activeElement !== inputBox) {
+                inputBox.focus();
+            }
+        }, true);
+        
+        setInterval(() => {
+            if (!loadingScreen.classList.contains('hidden')) return;
+            if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+            if (document.activeElement.tagName === 'INPUT' || 
+                document.activeElement.tagName === 'TEXTAREA' || 
+                document.activeElement.tagName === 'SELECT') return;
+            if (document.activeElement !== inputBox) {
+                inputBox.focus();
+            }
+        }, 100);
+        
+        document.addEventListener('click', (e) => {
+            if (loadingScreen.classList.contains('hidden')) {
+                // Don't prevent default or focus if clicking inside modals or on social links
+                if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+                if (e.target.closest('.social-link') || e.target.closest('.spline-badge-cover')) return;
+                e.preventDefault();
+                inputBox.focus();
+            }
+        }, true);
+    </script>
+</body>
+</html>
