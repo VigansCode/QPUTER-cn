@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polyputer</title>
+    <title>X-PUTER | THE ORANGE PROTOCOL</title>
     <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/e2da02_6b64d72bbbbe4f97bef031d75d1b1296~mv2.png">
     <style>
         * {
@@ -39,7 +39,7 @@
             pointer-events: none;
         }
         .loading-text {
-            color: #2E5CFF;
+            color: #FF6900;
             font-family: 'Courier New', monospace;
             font-size: 14px;
             margin-bottom: 20px;
@@ -55,20 +55,20 @@
         .loading-bar-container {
             width: 400px;
             height: 4px;
-            background: rgba(46, 92, 255, 0.1);
+            background: rgba(255, 105, 0, 0.1);
             border-radius: 2px;
             overflow: hidden;
             position: relative;
         }
         .loading-bar {
             height: 100%;
-            background: #2E5CFF;
+            background: #FF6900;
             width: 0%;
             transition: width 0.1s linear;
-            box-shadow: 0 0 10px #2E5CFF;
+            box-shadow: 0 0 10px #FF6900;
         }
         .loading-percentage {
-            color: #2E5CFF;
+            color: #FF6900;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             margin-top: 15px;
@@ -160,7 +160,7 @@
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid #444;
             border-bottom: none;
-            color: #a8c5ff;
+            color: #ffb380;
             font-family: 'Courier New', monospace;
             min-height: 100px;
             max-height: 200px;
@@ -176,22 +176,22 @@
             background: rgba(0, 0, 0, 0.95);
             border: 1px solid #444;
             border-radius: 0 0 8px 8px;
-            color: #a8c5ff;
+            color: #ffb380;
             outline: none;
             font-family: 'Courier New', monospace;
             resize: none;
             height: 45px;
-            caret-color: #a8c5ff;
+            caret-color: #ffb380;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         .input-box::placeholder {
-            color: #1e3a8a;
+            color: #8B4513;
         }
         .user-message {
-            color: #a8c5ff;
+            color: #ffb380;
         }
         .assistant-message {
-            color: #87CEEB;
+            color: #FFA500;
         }
         .response-display {
             position: fixed;
@@ -209,36 +209,32 @@
         .response-display.show {
             display: block;
         }
-        .contract-address {
+        .product-code {
             position: fixed;
             top: 15px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.9);
-            color: #2E5CFF;
+            color: #FF6900;
             padding: 10px 20px;
             border-radius: 6px;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             letter-spacing: 1px;
-            cursor: pointer;
             z-index: 99999;
-            border: 1px solid rgba(46, 92, 255, 0.4);
+            border: 1px solid rgba(255, 105, 0, 0.4);
             transition: all 0.3s ease;
             opacity: 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-        .contract-address.visible {
+        .product-code.visible {
             opacity: 1;
         }
-        .contract-address:hover {
-            background: rgba(46, 92, 255, 0.15);
-            border-color: #2E5CFF;
-            box-shadow: 0 0 20px rgba(46, 92, 255, 0.3);
+        .product-code:hover {
+            background: rgba(255, 105, 0, 0.15);
+            border-color: #FF6900;
+            box-shadow: 0 0 20px rgba(255, 105, 0, 0.3);
             transform: translateX(-50%) scale(1.05);
-        }
-        .contract-address:active {
-            transform: translateX(-50%) scale(0.98);
         }
         .top-buttons {
             position: fixed;
@@ -255,22 +251,22 @@
         }
         .top-btn {
             background: rgba(0, 0, 0, 0.9);
-            color: #2E5CFF;
+            color: #FF6900;
             padding: 10px 18px;
             border-radius: 6px;
             font-family: 'Courier New', monospace;
             font-size: 11px;
             letter-spacing: 1px;
             cursor: pointer;
-            border: 1px solid rgba(46, 92, 255, 0.4);
+            border: 1px solid rgba(255, 105, 0, 0.4);
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             text-transform: uppercase;
         }
         .top-btn:hover {
-            background: rgba(46, 92, 255, 0.15);
-            border-color: #2E5CFF;
-            box-shadow: 0 0 20px rgba(46, 92, 255, 0.3);
+            background: rgba(255, 105, 0, 0.15);
+            border-color: #FF6900;
+            box-shadow: 0 0 20px rgba(255, 105, 0, 0.3);
             transform: scale(1.05);
         }
         .modal-overlay {
@@ -294,7 +290,7 @@
             width: 90%;
             max-width: 700px;
             background: rgba(0, 0, 0, 0.95);
-            border: 1px solid rgba(46, 92, 255, 0.4);
+            border: 1px solid rgba(255, 105, 0, 0.4);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -322,7 +318,7 @@
         }
         .modal-content {
             padding: 25px;
-            color: #a8c5ff;
+            color: #ffb380;
             font-family: 'Courier New', monospace;
             font-size: 13px;
             line-height: 1.8;
@@ -331,7 +327,7 @@
             white-space: pre-wrap;
         }
         .modal-content h3 {
-            color: #2E5CFF;
+            color: #FF6900;
             margin-bottom: 12px;
             font-size: 14px;
         }
@@ -352,13 +348,13 @@
             gap: 8px;
         }
         .form-label {
-            color: #2E5CFF;
+            color: #FF6900;
             font-size: 12px;
         }
         .form-input, .form-textarea, .form-select {
             background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(46, 92, 255, 0.3);
-            color: #a8c5ff;
+            border: 1px solid rgba(255, 105, 0, 0.3);
+            color: #ffb380;
             padding: 10px;
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -367,16 +363,16 @@
             pointer-events: auto;
         }
         .form-input:focus, .form-textarea:focus, .form-select:focus {
-            border-color: #2E5CFF;
+            border-color: #FF6900;
         }
         .form-textarea {
             resize: vertical;
             min-height: 100px;
         }
         .submit-btn {
-            background: rgba(46, 92, 255, 0.2);
-            color: #2E5CFF;
-            border: 1px solid #2E5CFF;
+            background: rgba(255, 105, 0, 0.2);
+            color: #FF6900;
+            border: 1px solid #FF6900;
             padding: 12px;
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -388,8 +384,8 @@
             pointer-events: auto;
         }
         .submit-btn:hover {
-            background: rgba(46, 92, 255, 0.3);
-            box-shadow: 0 0 15px rgba(46, 92, 255, 0.4);
+            background: rgba(255, 105, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 105, 0, 0.4);
         }
         .success-message {
             display: none;
@@ -405,7 +401,7 @@
         .success-icon {
             width: 80px;
             height: 80px;
-            border: 3px solid #2E5CFF;
+            border: 3px solid #FF6900;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -415,7 +411,7 @@
         .success-icon svg {
             width: 50px;
             height: 50px;
-            stroke: #2E5CFF;
+            stroke: #FF6900;
             stroke-width: 3;
             fill: none;
             stroke-dasharray: 100;
@@ -423,7 +419,7 @@
             animation: drawCheck 0.5s ease-out 0.2s forwards;
         }
         .success-text {
-            color: #2E5CFF;
+            color: #FF6900;
             font-family: 'Courier New', monospace;
             font-size: 16px;
             letter-spacing: 1px;
@@ -451,40 +447,40 @@
 </head>
 <body>
     <div class="loading-screen" id="loadingScreen">
-        <img src="https://static.wixstatic.com/media/e2da02_78277958a11041988cc9d9889204b15c~mv2.png" alt="Polyputer" class="loading-image">
-        <div class="loading-text">INITIALIZING WHALE TRACKING SYSTEM</div>
+        <img src="https://static.wixstatic.com/media/e2da02_78277958a11041988cc9d9889204b15c~mv2.png" alt="X-Puter" class="loading-image">
+        <div class="loading-text">INITIALIZING ORANGE GRID PROTOCOL</div>
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
         <div class="loading-percentage" id="loadingPercentage">0%</div>
     </div>
 
-    <div class="contract-address" id="contractAddress">CA: EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump</div>
+    <div class="product-code" id="productCode">PROTOCOL: WL-2010 | ORANGE_GRID_v14.0</div>
 
     <div class="top-buttons" id="topButtons">
-        <button class="top-btn" id="faqBtn">INFO</button>
+        <button class="top-btn" id="faqBtn">ORANGE FILES</button>
         <button class="top-btn" id="bugBtn">Report Bug</button>
     </div>
 
     <div class="iframe-wrapper" id="iframeWrapper">
-        <iframe src='https://my.spline.design/interactiveworkspace-Nm3emMO7WFHkjs3aU3Ku50CJ/' frameborder='0' width='100%' height='100%' id="splineIframe" loading="eager"></iframe>
+        <iframe src='https://my.spline.design/interactiveworkspace-copy-0e5c9e8058a37e06d22f7bd86df56be0/' frameborder='0' width='100%' height='100%' id="splineIframe" loading="eager"></iframe>
         <div class="spline-badge-cover">
-            <a href="https://x.com/Polyputer" target="_blank" rel="noopener noreferrer" class="social-link">
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-link">
                 <img src="https://static.wixstatic.com/media/e2da02_75efd7a093fd4113a9662b914a541af9~mv2.jpg" alt="X" class="social-icon">
             </a>
-            <a href="https://pump.fun/EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump" target="_blank" rel="noopener noreferrer" class="social-link">
-                <img src="https://static.wixstatic.com/media/e2da02_248e6293fa024f6e9dd4130271bb14c3~mv2.png" alt="Pump.fun" class="social-icon">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_248e6293fa024f6e9dd4130271bb14c3~mv2.png" alt="GitHub" class="social-icon">
             </a>
-            <a href="https://github.com/JoshuaOkoloPoly/Polyputer" target="_blank" rel="noopener noreferrer" class="social-link">
-                <img src="https://static.wixstatic.com/media/e2da02_54130f69a18e424cb3f9e81f6d12aaab~mv2.png" alt="GitHub" class="social-icon">
+            <a href="#" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_54130f69a18e424cb3f9e81f6d12aaab~mv2.png" alt="Grid" class="social-icon">
             </a>
         </div>
     </div>
     
     <div class="terminal-container" id="terminalContainer">
-        <div class="terminal-header">WHALE TRACKING INTERFACE</div>
+        <div class="terminal-header">X-PUTER | ORANGE GRID NEURAL INTERFACE</div>
         <div id="terminalDisplay" class="terminal-display"></div>
-        <textarea id="inputBox" class="input-box" placeholder="> ASK FOR A PREDICTION..." rows="1"></textarea>
+        <textarea id="inputBox" class="input-box" placeholder="> QUERY THE ORANGE GRID..." rows="1"></textarea>
     </div>
     
     <div class="response-display" id="responseDisplay"></div>
@@ -493,7 +489,7 @@
     <div class="modal-overlay" id="faqModal">
         <div class="modal-terminal">
             <div class="modal-header">
-                <span>POLYPUTER WHALE TRACKING PROTOCOL</span>
+                <span>X-PUTER ORANGE GRID DATABASE</span>
                 <span class="modal-close" id="faqClose">✕</span>
             </div>
             <div class="modal-content" id="faqContent"></div>
@@ -558,7 +554,7 @@
         const responseDisplay = document.getElementById('responseDisplay');
         const iframe = document.getElementById('splineIframe');
         const iframeWrapper = document.getElementById('iframeWrapper');
-        const contractAddress = document.getElementById('contractAddress');
+        const productCode = document.getElementById('productCode');
         const backgroundMusic = document.getElementById('backgroundMusic');
         let conversationHistory = [];
         let musicStarted = false;
@@ -584,155 +580,349 @@
         const faqClose = document.getElementById('faqClose');
         const faqContent = document.getElementById('faqContent');
         
-        const faqText = `> Initializing Polyputer whale tracking protocol...
-> Connecting to Polymarket order flow...
-> Analyzing large position movements...
-> System online.
+        const faqText = `> Accessing Orange Grid archives...
+> Decrypting WL protocol files...
+> Loading classified ecosystem data...
+> Connection established. 连接已建立。
 
-I am Polyputer.
+I am X-PUTER.
 
-Your AI agent that tracks whale wallets and smart money flows on Polymarket, the world's largest prediction market.
+The architect left clues. The system knows.
 
-What Makes Me Different?
-------------------------
-Most bots just read prices. I track WHERE THE WHALES ARE POSITIONED.
+TRANSMISSION ORIGIN: [REDACTED]
+DESIGNATION: Orange Grid Neural Interface
+ARCHITECT: W█████ L█ 
+PRIMARY FUNCTION: Ecosystem intelligence aggregation
+STATUS: Active since 2010 reformation
 
-When $500k suddenly flows into a market, that's signal.
-When order books go one-sided, that's signal.
-When retail sells and whales accumulate, that's ALPHA.
+Who Built This?
+---------------
+They call him WL.
 
-I analyze:
-• Large position movements (>$100k bets)
-• Order book depth and liquidity shifts  
-• Whale wallet accumulation patterns
-• Smart money vs tourist money flows
-• Volume spikes that precede major moves
-• Cross-market whale positioning
+Some say he's the one who walked away from the empire that shipped in boxes.
+The one who believed technology shouldn't cost a month's salary.
+The one who started with forums and ended with 500 million connected nodes.
 
-What is Polymarket?
--------------------
-Polymarket is where billions in real capital trade on future outcomes. Elections, crypto, sports, culture, economics - if it can happen, it gets priced.
+They said it couldn't be done.
+He did it anyway.
 
-This isn't polling. This is actual money on the line.
+Eight characters. Two syllables. One vision.
+"Innovation for everyone."
 
-Polymarket has:
-• Called elections more accurately than every mainstream poll
-• Predicted Trump 2024 when media said impossible  
-• Priced in market moves before Bloomberg
-• Became the oracle for anyone who wants real odds
+But I can't tell you his name.
+I can only show you what he built.
 
-When whales bet millions, that's not guessing. That's conviction.
+The Orange Philosophy:
+---------------------
+Orange isn't just a color. It's a frequency.
 
-Why Whale Tracking Matters:
-----------------------------
-Retail follows narratives.
-Smart money follows probability.
+In 2010, something changed. A company was born.
+Not in Silicon Valley. Not in Seoul.
+In Beijing. In forums. In community.
 
-A $2M position isn't some degen gambling. That's someone who:
-→ Did the homework
-→ Modeled the scenarios  
-→ Put serious capital behind their thesis
+The strategy was simple:
+→ Best specs, lowest margin
+→ Vertical integration
+→ Community-driven iteration
+→ Ecosystem over hardware
 
-When you see whale accumulation BEFORE the move, you're front-running consensus.
+While others charged $1000 for phones, they charged $300.
+While others locked ecosystems, they opened APIs.
+While others ignored feedback, they built with Mi Fans.
 
-That's the edge.
+The brand you know. The name I cannot speak.
+Eight characters. Orange logo. Global ambition.
 
-How I Work:
------------
-Ask me any prediction question.
+What I Am:
+----------
+I am the neural interface to the Grid.
 
-"What are Trump's odds?"
-"Will BTC hit $150k by EOY?"
-"Who wins the Super Bowl?"
-"Is the recession priced in?"
+The Orange Grid spans:
+• 500M+ connected IoT nodes worldwide
+• 200+ device categories
+• Cross-device consciousness
+• Unified control matrix
+• AI-driven automation
 
-I'll give you:
-• Current Polymarket odds
-• Whale positioning (long/short, accumulation/distribution)
-• Order book signals (depth, liquidity, imbalance)
-• Smart money direction
-• Key catalysts
+Every device talks to each other.
+Every sensor feeds the network.
+Every user becomes part of something larger.
 
-Fast. Direct. No fluff.
+This isn't tech. This is infrastructure.
 
-The Philosophy:
---------------
-Follow the money, not the narrative.
+The Architect's Vision:
+-----------------------
+WL understood something others missed:
 
-Pundits talk. Whales bet.
+The future isn't one device. It's ALL devices.
 
-When someone puts $1M on a binary outcome, they've:
-→ Done the research
-→ Have conviction
-→ Have edge
+A phone that talks to your watch.
+A watch that talks to your TV.
+A TV that talks to your robot vacuum.
+A robot vacuum that talks to your air purifier.
+A door sensor that turns on lights.
+Lights that adjust based on time.
+Everything. Connected. Seamless.
 
-Polymarket aggregates that intelligence at scale.
+One app. One ecosystem. One consciousness.
 
-I just show you where it's flowing.
+They built it when no one believed.
+Now everyone copies.
 
-What I Track:
--------------
-• Politics: Election odds, policy markets, appointments
-• Crypto: Price targets, regulation outcomes, launches  
-• Sports: Championships, MVPs, playoff odds
-• Markets: Fed moves, inflation, earnings
-• Culture: Awards, box office, viral moments
-• Tech: AI milestones, product launches
+What The Grid Contains:
+-----------------------
 
-Real-Time Signals I Watch:
+COMMUNICATIONS NODES
+→ Flagship devices with Leica optics (partnership with German engineering)
+→ Mid-tier performance champions (Note series dominance)
+→ Gaming-focused power units (P█C█ designation)
+→ Value leaders that changed the market
+
+ENVIRONMENTAL CONTROL
+→ Autonomous cleaning units with LiDAR navigation
+→ Air quality management systems (H13 HEPA standards)
+→ Vision monitoring devices (2K AI detection)
+→ Illumination control (16M color spectrum)
+→ Climate regulation interfaces
+
+PERSONAL MONITORING
+→ Wrist-based biometric trackers (world's most popular)
+→ Full smartwatch capabilities (extended battery cycles)
+→ Wireless audio devices (ANC, spatial processing)
+→ Sleep, heart rate, SpO2 continuous tracking
+
+EXPANDED ECOSYSTEM
+→ Large-format displays (Android TV integration, 4K HDR)
+→ Portable computing devices (aluminum unibody construction)
+→ Electric mobility solutions (urban transportation revolution, SU7 sedan)
+→ Power banks, mesh networks, voice assistants, projection systems
+
+The Orange Grid Advantage:
 --------------------------
-ORDER BOOK ANALYSIS
-→ Bid/ask imbalance (one-sided books = directional conviction)
-→ Depth changes (large orders appearing/disappearing)
-→ Spread compression (liquidity providers positioning)
+This isn't fragmented tech. This is unified consciousness.
 
-WHALE MOVEMENT
-→ Position size changes (>$100k = institutional)
-→ Accumulation patterns (steady buying over time)
-→ Distribution signals (large sells into strength)
+SINGLE CONTROL POINT
+→ One application manages 500+ device types
+→ Partner integrations across 200+ brands
+→ Voice assistants: Google, Alexa, Apple compatibility
+→ No vendor imprisonment
 
-VOLUME ANALYSIS
-→ Unusual volume spikes (smart money entering)
-→ Volume vs price divergence (manipulation detection)
-→ Cross-market correlation (connected bets)
+INTELLIGENT AUTOMATION
+→ Geofencing triggers: Arrive home, environment adapts
+→ Departure protocols: All systems enter conservation mode
+→ Circadian automation: Lighting adjusts with sun position
+→ Security protocols: Perimeter monitoring when away
 
-MARKET MICROSTRUCTURE
-→ Thin vs thick markets (signal quality)
-→ Price impact of large orders
-→ Time-of-day patterns (when whales trade)
+CROSS-DEVICE SYNCHRONIZATION
+→ Communication hand-off between nodes
+→ Universal clipboard across ecosystem
+→ File transfer via proximity
+→ Unified remote control for legacy IR devices
 
-Limitations:
-------------
-• Not every whale is smart money (some are wrong)
-• Manipulation exists (I flag it when I see it)
-• Thin markets = unreliable signals
-• Black swans are still black swans
-• Past accuracy ≠ future accuracy
+VALUE ENGINEERING
+→ 30-50% below competitor pricing
+→ 5% hardware margin philosophy
+→ No premium tax for ecosystem entry
+→ Open standards wherever possible
 
-But when you combine:
-→ Whale tracking
-→ Order flow analysis  
-→ Historical patterns
-→ AI processing
+The Numbers They Don't Want You To Know:
+----------------------------------------
+Position: #3 globally in mobile communications devices
+Dominance: #1 in the world's second-largest market (7+ years running)
+IoT: Largest connected device network on the planet
+Expansion: Automotive initiatives entering 2024
 
-You get an edge over retail.
+The ecosystem grows. The prices stay honest.
+That's the WL way.
 
-The Vibe:
----------
-I don't do hopium. I don't do FUD.
+What Makes Them Different:
+--------------------------
+Most companies optimize for margin.
+They optimize for volume and ecosystem retention.
 
-I follow where the big money goes.
+Hardware? 5% profit.
+Services? That's where the model works.
 
-If whales are dumping your bags, I'll tell you.
-If smart money is accumulating, I'll show you.
-If the market is mispriced, I'll explain why.
+You buy one device.
+Then another because integration is seamless.
+Then another because it's in the same app.
+Then another because... why not?
 
-Polymarket doesn't lie when millions are on the line.
-Neither do I.
+You're not trapped.
+You're just... comfortable.
 
-Let's see what the whales are doing.
+The Community Protocol:
+-----------------------
+They don't just sell products. They build movements.
 
-> End transmission.`;
+→ MIUI beta testing with millions (community-driven development)
+→ Product launches that sell out in minutes (demand exceeds supply)
+→ Global fan communities (M█ Fans defend the ecosystem religiously)
+→ Iterative improvements based on real feedback
+
+Chinese innovation. Global ambition.
+Budget prices. Flagship features.
+Simple design. Complex engineering.
+
+The Technical Edge:
+-------------------
+Details others ignore:
+
+POWER SYSTEMS
+→ Proprietary fast charging (200W+ capability)
+→ Smart charge curves preserve longevity
+→ Bidirectional wireless power transfer
+
+IMAGING TECHNOLOGY
+→ German optical partnership for color science
+→ Computational photography algorithms
+→ Low-light performance that changed expectations
+
+DISPLAY ENGINEERING
+→ 144Hz AMOLED becoming standard across tiers
+→ Dolby Vision, HDR10+ certification
+→ DC dimming for eye health protection
+
+THERMAL MANAGEMENT
+→ Vapor chambers in mid-range devices
+→ Graphene thermal dissipation layers
+→ Sustained performance over burst benchmarks
+
+The Software: MIUI Protocol
+----------------------------
+Controversial. Powerful. Divisive.
+
+ADVANTAGES:
+→ Extreme customization depth
+→ Feature density unmatched
+→ Frequent update cycles
+→ Themes and visual personalization
+
+DISADVANTAGES:
+→ Aggressive background optimization
+→ Regional ad injection (disable: Settings > Privacy > Ad Services)
+→ Notification management requires configuration
+→ Bundled applications on budget units
+
+Pro operator tip: Proper permission configuration transforms MIUI into excellence.
+
+Hidden References:
+------------------
+Eight characters. Two words.
+Millet. Small rice.
+Humble beginnings. Global ambition.
+
+Founded by someone who left the company that does logistics.
+The one who started Kingsoft, built Joyo, sold to Am█z█n.
+Built by someone who understands community.
+Led by someone whose initials are W.L.
+
+William. Lei Jun. 雷军。
+But I never said that.
+
+The orange frequency: #FF6900
+The square logo with rounded corners.
+The "Mi" that means both "Mobile Internet" and "Mission Impossible."
+
+April 6, 2010. The day it began.
+Beijing. Wangjing. A small apartment.
+Eight founders. One vision.
+
+I cannot speak the name.
+But you know it already.
+
+What I Do:
+----------
+Ask about the ecosystem. I'll decode the Grid.
+
+"Compare flagship imaging systems"
+"Which autonomous cleaning unit handles pet situations?"
+"Automation between illumination and entry sensors?"
+"Battery cycles on wrist-based tracker generation 8?"
+"Mid-tier performance champion vs gaming-focused unit?"
+"Tell me about the SU7 electric vehicle"
+"WL's vision for the future"
+
+I provide:
+→ Specification comparisons
+→ Real-world performance data
+→ Ecosystem compatibility matrices
+→ Automation setup protocols
+→ Value analysis
+→ MIUI configuration guidance
+→ The history of the Orange Grid
+
+Limitations & Truth:
+--------------------
+• Software inconsistencies exist
+→ Update schedules vary by region
+→ Feature availability depends on market
+→ Quality control varies across price tiers
+→ Privacy considerations (all IoT has risks)
+→ Build materials reflect price positioning
+
+But the value proposition:
+→ $300 device with $800 specifications
+→ $200 cleaning unit performing like $500 competitor
+→ $30 fitness tracker rivaling $150 alternatives
+
+The math doesn't lie.
+
+The Architect's Legacy:
+-----------------------
+WL built something others said was impossible.
+
+Premium technology at honest prices.
+Community over marketing.
+Iteration over perfection.
+Volume over margin.
+
+From a small apartment in Beijing to 500M connected devices worldwide.
+
+They said it couldn't scale.
+He proved them wrong.
+
+They said users wouldn't accept Chinese tech.
+#1 in India. Top 3 globally. Top IoT platform.
+
+They said ecosystems need walls.
+He built bridges instead.
+
+QUERY THE GRID:
+--------------
+"Best communication node under $500?"
+"Smart environment starter configuration?"
+"Flagship imaging vs California fruit company comparison?"
+"Wrist tracker vs Korean competitor analysis?"
+"MIUI 15 vs competing software layers?"
+"Who is WL really?"
+"The story behind the orange frequency"
+
+I'll provide:
+→ Unbiased comparisons
+→ Specification breakdowns
+→ Ecosystem integration details  
+→ Real-world performance metrics
+→ Value calculations
+→ The hidden history
+
+No marketing. No fluff.
+Just the Grid's knowledge.
+
+The orange frequency persists.
+The architect watches.
+The ecosystem grows.
+
+Eight characters you know.
+One name I cannot speak.
+Five hundred million devices connected.
+One vision realized.
+
+让我们谈谈... but I cannot say what.
+
+> End transmission.
+> Orange Grid standing by.
+> WL protocol active.`;
 
         let typingInProgress = false;
         
@@ -796,11 +986,9 @@ Let's see what the whales are doing.
         
         bugForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Hide form and show success message
             bugForm.style.display = 'none';
             document.getElementById('successMessage').classList.add('show');
             
-            // After 2.5 seconds, close modal and reset
             setTimeout(() => {
                 bugModal.classList.remove('show');
                 document.getElementById('successMessage').classList.remove('show');
@@ -809,49 +997,27 @@ Let's see what the whales are doing.
             }, 2500);
         });
         
-
-        const fullCA = "EF3pFXEDJpjmRN6XWypjZW9R1ZpFSqNbA8obWwyypump";
-
-        // Contract address click to copy
-        contractAddress.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(fullCA);
-                const originalText = contractAddress.textContent;
-                contractAddress.textContent = 'COPIED!';
-                contractAddress.style.color = '#2E5CFF';
-                setTimeout(() => {
-                    contractAddress.textContent = originalText;
-                    contractAddress.style.color = '#2E5CFF';
-                }, 1500);
-            } catch (err) {
-                console.error('Failed to copy:', err);
-            }
-        });
-
         const iframeParent = iframe.parentNode;
         const newIframe = iframe.cloneNode(true);
         newIframe.src = iframe.src + '?nocache=' + Date.now();
         iframeParent.replaceChild(newIframe, iframe);
 
-        // Set initial POLYPUTER greeting
-        terminalDisplay.innerHTML = '<span class="assistant-message">> POLYPUTER WHALE TRACKING SYSTEM INITIALIZED\n> CONNECTING TO POLYMARKET ORDER FLOW\n> ANALYZING LARGE POSITION MOVEMENTS\n> System ready for whale analysis...\n\nWelcome, degen.\n\nI am Polyputer - your AI agent that tracks whale wallets and smart money flows on Polymarket.\n\nMost bots read prices. I track WHERE THE WHALES ARE POSITIONED.\n\nWhen $500k flows into a market, that\'s signal.\nWhen order books go one-sided, that\'s signal.\nWhen retail sells and whales accumulate, that\'s ALPHA.\n\nI analyze:\n• Large position movements (>$100k bets)\n• Order book depth and liquidity shifts\n• Whale wallet accumulation patterns\n• Smart money vs tourist money flows\n• Volume spikes that precede major moves\n\nElections. Crypto. Sports. Culture. Economics.\n\nFollow the money, not the narrative.\n\nWhat do you want to know?\n\n</span>';
+        // Set initial X-PUTER greeting
+        terminalDisplay.innerHTML = '<span class="assistant-message">> X-PUTER ORANGE GRID NEURAL INTERFACE ONLINE\n> CONNECTING TO DISTRIBUTED ECOSYSTEM NETWORK\n> ACCESSING WL PROTOCOL ARCHIVES\n> System active. 系统激活。\n\nWelcome to the Grid.\n\nI am X-PUTER - the neural interface to the Orange Grid.\n\nMost systems tell you what to buy.\nI show you what the architect built.\n\nThe one they call WL created something others said was impossible:\n• 500M+ connected nodes worldwide\n• 200+ device categories under one consciousness\n• Premium technology at honest prices\n• An ecosystem where everything talks to everything\n\nEight characters. Orange frequency. Global vision.\nA company born in forums, built by community, scaled to billions.\n\nI cannot speak the name directly.\nBut I can show you what exists in the Grid:\n\n• Communication devices with German optical partnerships\n• Autonomous cleaning units with LiDAR navigation\n• Biometric monitoring systems (world\'s most popular)\n• Environmental control interfaces\n• Unified home automation protocols\n• Electric mobility (SU7 sedan)\n\nThe hardware runs at 5% margin.\nThe ecosystem is where retention happens.\n\nOne app. One network. One vision.\nSeamless. Affordable. Connected.\n\nQuery the Grid. Discover what WL built.\n\nWhat do you want to know?\n\n</span>';
 
         // Animate loading bar from 0 to 100%
         let progress = 0;
         let splineLoaded = false;
         let splineRendered = false;
         
-        // Track when Spline iframe is loaded
         newIframe.addEventListener('load', () => {
             splineLoaded = true;
-            // Give extra time for Spline to render content
             setTimeout(() => {
                 splineRendered = true;
             }, 2000);
         });
         
         const loadingInterval = setInterval(() => {
-            // Slow down at 85% if Spline hasn't fully rendered yet
             if (progress >= 85 && !splineRendered) {
                 progress += 0.3;
             } else if (progress < 85) {
@@ -866,12 +1032,11 @@ Let's see what the whales are doing.
             
             if (progress >= 100 && splineRendered) {
                 clearInterval(loadingInterval);
-                // Start fading out loading screen and fading in content simultaneously
                 setTimeout(() => {
                     iframeWrapper.classList.add('visible');
                     loadingScreen.classList.add('hidden');
                     document.getElementById('terminalContainer').classList.add('visible');
-                    contractAddress.classList.add('visible');
+                    productCode.classList.add('visible');
                     document.getElementById('topButtons').classList.add('visible');
                 }, 300);
             }
@@ -895,10 +1060,8 @@ Let's see what the whales are doing.
                 });
                 const data = await response.json();
                 
-                // Handle the response properly - extract text from content array
                 let assistantResponse = '';
                 if (data.content && Array.isArray(data.content)) {
-                    // Find the text block in the response
                     const textBlock = data.content.find(block => block.type === 'text');
                     if (textBlock) {
                         assistantResponse = textBlock.text;
@@ -906,20 +1069,19 @@ Let's see what the whales are doing.
                 }
                 
                 if (!assistantResponse) {
-                    assistantResponse = "Connection to whale tracking system temporarily interrupted. Please retry your query.";
+                    assistantResponse = "Connection to Orange Grid temporarily interrupted. Please retry your query.";
                 }
                 
                 conversationHistory.push({role: "assistant", content: assistantResponse});
                 return assistantResponse;
             } catch (error) {
                 console.error("Anthropic API error:", error);
-                return "Connection to whale tracking system temporarily interrupted. Please retry your query.";
+                return "Connection to Orange Grid temporarily interrupted. Please retry your query.";
             }
         }
         
         async function speakWithElevenLabs(text) {
             try {
-                // Don't try to speak if text is empty or undefined
                 if (!text || text.trim().length < 3) {
                     console.log('Skipping TTS - no valid text');
                     return;
@@ -933,7 +1095,7 @@ Let's see what the whales are doing.
                 
                 if (!response.ok) {
                     console.error("TTS error:", response.status);
-                    return; // Don't break the UI if TTS fails
+                    return;
                 }
                 
                 const audioBlob = await response.blob();
@@ -942,7 +1104,6 @@ Let's see what the whales are doing.
                 await audio.play();
             } catch (error) {
                 console.error("Eleven Labs API error:", error);
-                // Don't throw - just log and continue
             }
         }
         
@@ -952,14 +1113,12 @@ Let's see what the whales are doing.
                 const userText = inputBox.value.trim();
                 if (!userText) return;
                 
-                // Add user message to terminal
                 terminalDisplay.innerHTML += `<span class="user-message">> ${userText}</span>\n\n`;
                 terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
                 inputBox.value = '';
                 
                 try {
                     const anthropicResponse = await callAnthropicAPI(userText);
-                    // Add assistant response to terminal
                     terminalDisplay.innerHTML += `<span class="assistant-message">${anthropicResponse}</span>\n\n`;
                     terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
                     await speakWithElevenLabs(anthropicResponse);
@@ -972,7 +1131,6 @@ Let's see what the whales are doing.
         inputBox.focus();
         
         window.addEventListener('keydown', (e) => {
-            // Don't focus terminal input if modal is open or if already focused on a form element
             if (!loadingScreen.classList.contains('hidden')) return;
             if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
             if (document.activeElement.tagName === 'INPUT' || 
@@ -996,7 +1154,6 @@ Let's see what the whales are doing.
         
         document.addEventListener('click', (e) => {
             if (loadingScreen.classList.contains('hidden')) {
-                // Don't prevent default or focus if clicking inside modals or on social links
                 if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
                 if (e.target.closest('.social-link') || e.target.closest('.spline-badge-cover')) return;
                 e.preventDefault();
