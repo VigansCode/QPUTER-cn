@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const voiceId = '4VZIsMPtgggwNg7OXbPY';
+    const voiceId = process.env.ELEVEN_LABS_VOICE_ID || '4VZIsMPtgggwNg7OXbPY';
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
       {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         headers: {
           'Accept': 'audio/mpeg',
           'Content-Type': 'application/json',
-          'xi-api-key': process.env.ELEVENLABS_API_KEY
+          'xi-api-key': process.env.ELEVEN_LABS_API_KEY
         },
         body: JSON.stringify({
           text: text,
