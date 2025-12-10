@@ -451,18 +451,18 @@
 <body>
     <div class="loading-screen" id="loadingScreen">
         <img src="https://static.wixstatic.com/media/e2da02_78277958a11041988cc9d9889204b15c~mv2.png" alt="XPuter" class="loading-image">
-        <div class="loading-text">INITIALIZING ORANGE GRID PROTOCOL</div>
+        <div class="loading-text">初始化橙色网络协议</div>
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
         <div class="loading-percentage" id="loadingPercentage">0%</div>
     </div>
 
-    <div class="product-code" id="productCode">CA: TBA</div>
+    <div class="product-code" id="productCode">CA: 待定</div>
 
     <div class="top-buttons" id="topButtons">
-        <button class="top-btn" id="faqBtn">ORANGE FILES</button>
-        <button class="top-btn" id="bugBtn">Report Bug</button>
+        <button class="top-btn" id="faqBtn">橙色档案</button>
+        <button class="top-btn" id="bugBtn">报告错误</button>
     </div>
 
     <div class="iframe-wrapper" id="iframeWrapper">
@@ -481,9 +481,9 @@
     </div>
     
     <div class="terminal-container" id="terminalContainer">
-        <div class="terminal-header">XPuter | ORANGE GRID NEURAL INTERFACE</div>
+        <div class="terminal-header">XPuter | 橙色网络神经接口</div>
         <div id="terminalDisplay" class="terminal-display"></div>
-        <textarea id="inputBox" class="input-box" placeholder="> QUERY THE ORANGE GRID..." rows="1"></textarea>
+        <textarea id="inputBox" class="input-box" placeholder="> 查询橙色网络..." rows="1"></textarea>
     </div>
     
     <div class="response-display" id="responseDisplay"></div>
@@ -492,7 +492,7 @@
     <div class="modal-overlay" id="faqModal">
         <div class="modal-terminal">
             <div class="modal-header">
-                <span>XPuter ORANGE GRID DATABASE</span>
+                <span>XPuter 橙色网络数据库</span>
                 <span class="modal-close" id="faqClose">✕</span>
             </div>
             <div class="modal-content" id="faqContent"></div>
@@ -503,33 +503,33 @@
     <div class="modal-overlay" id="bugModal">
         <div class="modal-terminal">
             <div class="modal-header">
-                <span>BUG REPORT SYSTEM</span>
+                <span>错误报告系统</span>
                 <span class="modal-close" id="bugClose">✕</span>
             </div>
             <div class="modal-content">
                 <form class="bug-form" id="bugForm">
                     <div class="form-group">
-                        <label class="form-label">Bug Title *</label>
-                        <input type="text" class="form-input" name="title" placeholder="Brief description of the issue" required>
+                        <label class="form-label">错误标题 *</label>
+                        <input type="text" class="form-input" name="title" placeholder="问题的简要描述" required>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Description *</label>
-                        <textarea class="form-textarea" name="description" placeholder="Detailed explanation of what happened and how to reproduce the bug" required></textarea>
+                        <label class="form-label">描述 *</label>
+                        <textarea class="form-textarea" name="description" placeholder="详细说明发生了什么以及如何重现错误" required></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Priority *</label>
+                        <label class="form-label">优先级 *</label>
                         <select class="form-select" name="priority" required>
-                            <option value="">Select priority level</option>
-                            <option value="low">Low - Minor visual issue</option>
-                            <option value="medium">Medium - Affects functionality</option>
-                            <option value="high">High - Major feature broken</option>
-                            <option value="critical">Critical - Site unusable</option>
+                            <option value="">选择优先级</option>
+                            <option value="low">低 - 轻微视觉问题</option>
+                            <option value="medium">中 - 影响功能</option>
+                            <option value="high">高 - 主要功能损坏</option>
+                            <option value="critical">严重 - 网站无法使用</option>
                         </select>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Submit Report</button>
+                    <button type="submit" class="submit-btn">提交报告</button>
                 </form>
                 
                 <div class="success-message" id="successMessage">
@@ -538,7 +538,7 @@
                             <polyline points="14,27 22,35 38,19"/>
                         </svg>
                     </div>
-                    <div class="success-text">Bug report submitted successfully!</div>
+                    <div class="success-text">错误报告提交成功！</div>
                 </div>
             </div>
         </div>
@@ -583,349 +583,272 @@
         const faqClose = document.getElementById('faqClose');
         const faqContent = document.getElementById('faqContent');
         
-        const faqText = `> Accessing Orange Grid archives...
-> Decrypting WL protocol files...
-> Loading classified ecosystem data...
-> Connection established. 连接已建立。
+        const faqText = `> 访问橙色网络档案...
+> 解密 WL 协议文件...
+> 加载机密生态系统数据...
+> 连接已建立。
 
-I am XPuter.
+我是 XPuter。
 
-The architect left clues. The system knows.
+架构师留下了线索。系统知道。
 
-TRANSMISSION ORIGIN: [REDACTED]
-DESIGNATION: Orange Grid Neural Interface
-ARCHITECT: W█████ L█ 
-PRIMARY FUNCTION: Ecosystem intelligence aggregation
-STATUS: Active since 2010 reformation
+传输来源：[已编辑]
+代号：橙色网络神经接口
+架构师：W█████ L█
+主要功能：生态系统智能聚合
+状态：自2010年改革以来活跃
 
-Who Built This?
+谁建造了这个？
 ---------------
-They call him WL.
+他们叫他 WL。
 
-Some say he's the one who walked away from the empire that shipped in boxes.
-The one who believed technology shouldn't cost a month's salary.
-The one who started with forums and ended with 500 million connected nodes.
+有人说他是从盒子帝国走出来的人。
+相信技术不应该花费一个月的工资。
+从论坛开始，以 5 亿个连接节点结束。
 
-They said it couldn't be done.
-He did it anyway.
+他们说做不到。
+他还是做到了。
 
-Eight characters. Two syllables. One vision.
-"Innovation for everyone."
+八个字符。两个音节。一个愿景。
+"为所有人创新。"
 
-But I can't tell you his name.
-I can only show you what he built.
+但我不能告诉你他的名字。
+我只能向你展示他建造了什么。
 
-The Orange Philosophy:
+橙色哲学：
 ---------------------
-Orange isn't just a color. It's a frequency.
+橙色不仅仅是一种颜色。它是一个频率。
 
-In 2010, something changed. A company was born.
-Not in Silicon Valley. Not in Seoul.
-In Beijing. In forums. In community.
+2010年，一些事情改变了。一家公司诞生了。
+不在硅谷。不在首尔。
+在北京。在论坛中。在社区中。
 
-The strategy was simple:
-→ Best specs, lowest margin
-→ Vertical integration
-→ Community-driven iteration
-→ Ecosystem over hardware
+策略很简单：
+→ 最佳规格，最低利润率
+→ 垂直整合
+→ 社区驱动的迭代
+→ 生态系统优于硬件
 
-While others charged $1000 for phones, they charged $300.
-While others locked ecosystems, they opened APIs.
-While others ignored feedback, they built with Mi Fans.
+当其他人对手机收费 1000 美元时，他们收费 300 美元。
+当其他人锁定生态系统时，他们开放了 API。
+当其他人忽视反馈时，他们与 Mi 粉丝一起构建。
 
-The brand you know. The name I cannot speak.
-Eight characters. Orange logo. Global ambition.
+你知道的品牌。我不能说的名字。
+八个字符。橙色标志。全球野心。
 
-What I Am:
+我是什么：
 ----------
-I am the neural interface to the Grid.
+我是网络的神经接口。
 
-The Orange Grid spans:
-• 500M+ connected IoT nodes worldwide
-• 200+ device categories
-• Cross-device consciousness
-• Unified control matrix
-• AI-driven automation
+橙色网络跨越：
+• 全球 5 亿+ 连接的物联网节点
+• 200+ 设备类别
+• 跨设备意识
+• 统一控制矩阵
+• AI 驱动的自动化
 
-Every device talks to each other.
-Every sensor feeds the network.
-Every user becomes part of something larger.
+每个设备都相互交谈。
+每个传感器都为网络提供信息。
+每个用户都成为更大事物的一部分。
 
-This isn't tech. This is infrastructure.
+这不是技术。这是基础设施。
 
-The Architect's Vision:
------------------------
-WL understood something others missed:
-
-The future isn't one device. It's ALL devices.
-
-A phone that talks to your watch.
-A watch that talks to your TV.
-A TV that talks to your robot vacuum.
-A robot vacuum that talks to your air purifier.
-A door sensor that turns on lights.
-Lights that adjust based on time.
-Everything. Connected. Seamless.
-
-One app. One ecosystem. One consciousness.
-
-They built it when no one believed.
-Now everyone copies.
-
-What The Grid Contains:
+网络包含什么：
 -----------------------
 
-COMMUNICATIONS NODES
-→ Flagship devices with Leica optics (partnership with German engineering)
-→ Mid-tier performance champions (Note series dominance)
-→ Gaming-focused power units (P█C█ designation)
-→ Value leaders that changed the market
+通信节点
+→ 与德国光学技术合作的旗舰设备（徕卡合作）
+→ 中端性能冠军（Note 系列主导地位）
+→ 游戏专注的动力单元（P█C█ 代号）
+→ 改变市场的价值领导者
 
-ENVIRONMENTAL CONTROL
-→ Autonomous cleaning units with LiDAR navigation
-→ Air quality management systems (H13 HEPA standards)
-→ Vision monitoring devices (2K AI detection)
-→ Illumination control (16M color spectrum)
-→ Climate regulation interfaces
+环境控制
+→ 带激光雷达导航的自主清洁单元
+→ 空气质量管理系统（H13 HEPA 标准）
+→ 视觉监控设备（2K AI 检测）
+→ 照明控制（1600万色谱）
+→ 气候调节接口
 
-PERSONAL MONITORING
-→ Wrist-based biometric trackers (world's most popular)
-→ Full smartwatch capabilities (extended battery cycles)
-→ Wireless audio devices (ANC, spatial processing)
-→ Sleep, heart rate, SpO2 continuous tracking
+个人监测
+→ 基于手腕的生物识别追踪器（全球最受欢迎）
+→ 完整的智能手表功能（延长电池周期）
+→ 无线音频设备（ANC、空间处理）
+→ 睡眠、心率、SpO2 连续跟踪
 
-EXPANDED ECOSYSTEM
-→ Large-format displays (Android TV integration, 4K HDR)
-→ Portable computing devices (aluminum unibody construction)
-→ Electric mobility solutions (urban transportation revolution, SU7 sedan)
-→ Power banks, mesh networks, voice assistants, projection systems
+扩展生态系统
+→ 大格式显示器（Android TV 集成，4K HDR）
+→ 便携式计算设备（铝制一体式结构）
+→ 电动出行解决方案（城市交通革命，SU7 轿车）
+→ 移动电源、网状网络、语音助手、投影系统
 
-The Orange Grid Advantage:
+橙色网络优势：
 --------------------------
-This isn't fragmented tech. This is unified consciousness.
+这不是碎片化的技术。这是统一的意识。
 
-SINGLE CONTROL POINT
-→ One application manages 500+ device types
-→ Partner integrations across 200+ brands
-→ Voice assistants: Google, Alexa, Apple compatibility
-→ No vendor imprisonment
+单一控制点
+→ 一个应用程序管理 500+ 设备类型
+→ 跨 200+ 品牌的合作伙伴集成
+→ 语音助手：Google、Alexa、Apple 兼容性
+→ 没有供应商锁定
 
-INTELLIGENT AUTOMATION
-→ Geofencing triggers: Arrive home, environment adapts
-→ Departure protocols: All systems enter conservation mode
-→ Circadian automation: Lighting adjusts with sun position
-→ Security protocols: Perimeter monitoring when away
+智能自动化
+→ 地理围栏触发：到家，环境适应
+→ 离开协议：所有系统进入节能模式
+→ 昼夜节律自动化：照明随太阳位置调整
+→ 安全协议：离开时周边监控
 
-CROSS-DEVICE SYNCHRONIZATION
-→ Communication hand-off between nodes
-→ Universal clipboard across ecosystem
-→ File transfer via proximity
-→ Unified remote control for legacy IR devices
+跨设备同步
+→ 节点之间的通信切换
+→ 生态系统中的通用剪贴板
+→ 通过接近进行文件传输
+→ 传统 IR 设备的统一远程控制
 
-VALUE ENGINEERING
-→ 30-50% below competitor pricing
-→ 5% hardware margin philosophy
-→ No premium tax for ecosystem entry
-→ Open standards wherever possible
+价值工程
+→ 比竞争对手定价低 30-50%
+→ 5% 硬件利润率哲学
+→ 进入生态系统无需支付溢价
+→ 尽可能使用开放标准
 
-The Numbers They Don't Want You To Know:
+他们不想让你知道的数字：
 ----------------------------------------
-Position: #3 globally in mobile communications devices
-Dominance: #1 in the world's second-largest market (7+ years running)
-IoT: Largest connected device network on the planet
-Expansion: Automotive initiatives entering 2024
+地位：全球移动通信设备第三
+主导地位：在世界第二大市场连续 7 年排名第一
+物联网：地球上最大的连接设备网络
+扩展：2024 年进入汽车计划
 
-The ecosystem grows. The prices stay honest.
-That's the WL way.
+生态系统在增长。价格保持诚实。
+这就是 WL 的方式。
 
-What Makes Them Different:
+是什么让他们与众不同：
 --------------------------
-Most companies optimize for margin.
-They optimize for volume and ecosystem retention.
+大多数公司优化利润率。
+他们优化数量和生态系统保留。
 
-Hardware? 5% profit.
-Services? That's where the model works.
+硬件？5% 利润。
+服务？这就是模型的运作方式。
 
-You buy one device.
-Then another because integration is seamless.
-Then another because it's in the same app.
-Then another because... why not?
+你买一个设备。
+然后是另一个，因为集成无缝。
+然后是另一个，因为它在同一个应用程序中。
+然后是另一个，因为...为什么不呢？
 
-You're not trapped.
-You're just... comfortable.
+你没有被困住。
+你只是...舒适。
 
-The Community Protocol:
------------------------
-They don't just sell products. They build movements.
-
-→ MIUI beta testing with millions (community-driven development)
-→ Product launches that sell out in minutes (demand exceeds supply)
-→ Global fan communities (M█ Fans defend the ecosystem religiously)
-→ Iterative improvements based on real feedback
-
-Chinese innovation. Global ambition.
-Budget prices. Flagship features.
-Simple design. Complex engineering.
-
-The Technical Edge:
+技术优势：
 -------------------
-Details others ignore:
+其他人忽略的细节：
 
-POWER SYSTEMS
-→ Proprietary fast charging (200W+ capability)
-→ Smart charge curves preserve longevity
-→ Bidirectional wireless power transfer
+电力系统
+→ 专有快速充电（200W+ 能力）
+→ 智能充电曲线保持寿命
+→ 双向无线电力传输
 
-IMAGING TECHNOLOGY
-→ German optical partnership for color science
-→ Computational photography algorithms
-→ Low-light performance that changed expectations
+成像技术
+→ 德国光学合作伙伴的色彩科学
+→ 计算摄影算法
+→ 改变期望的低光性能
 
-DISPLAY ENGINEERING
-→ 144Hz AMOLED becoming standard across tiers
-→ Dolby Vision, HDR10+ certification
-→ DC dimming for eye health protection
+显示工程
+→ 144Hz AMOLED 成为各层级标准
+→ 杜比视界、HDR10+ 认证
+→ DC 调光用于眼睛健康保护
 
-THERMAL MANAGEMENT
-→ Vapor chambers in mid-range devices
-→ Graphene thermal dissipation layers
-→ Sustained performance over burst benchmarks
+热管理
+→ 中端设备中的蒸汽室
+→ 石墨烯热耗散层
+→ 持续性能优于突发基准
 
-The Software: MIUI Protocol
+软件：MIUI 协议
 ----------------------------
-Controversial. Powerful. Divisive.
+有争议的。强大的。分裂的。
 
-ADVANTAGES:
-→ Extreme customization depth
-→ Feature density unmatched
-→ Frequent update cycles
-→ Themes and visual personalization
+优势：
+→ 极端自定义深度
+→ 无与伦比的功能密度
+→ 频繁的更新周期
+→ 主题和视觉个性化
 
-DISADVANTAGES:
-→ Aggressive background optimization
-→ Regional ad injection (disable: Settings > Privacy > Ad Services)
-→ Notification management requires configuration
-→ Bundled applications on budget units
+劣势：
+→ 激进的后台优化
+→ 区域广告注入（禁用：设置 > 隐私 > 广告服务）
+→ 通知管理需要配置
+→ 预算单元上的捆绑应用程序
 
-Pro operator tip: Proper permission configuration transforms MIUI into excellence.
+专业操作员提示：正确的权限配置将 MIUI 转变为卓越。
 
-Hidden References:
+隐藏的参考：
 ------------------
-Eight characters. Two words.
-Millet. Small rice.
-Humble beginnings. Global ambition.
+八个字符。两个词。
+小米。小粒。
+谦逊的开始。全球野心。
 
-Founded by someone who left the company that does logistics.
-The one who started Kingsoft, built Joyo, sold to Am█z█n.
-Built by someone who understands community.
-Led by someone whose initials are W.L.
+由离开物流公司的人创立。
+开始金山的人，建立卓越，卖给亚█逊。
+由理解社区的人建立。
+由首字母为 W.L. 的人领导。
 
-William. Lei Jun. 雷军。
-But I never said that.
+威廉。雷军。但我从未说过。
 
-The orange frequency: #FF6900
-The square logo with rounded corners.
-The "Mi" that means both "Mobile Internet" and "Mission Impossible."
+橙色频率：#FF6900
+带圆角的方形标志。
+"Mi"既表示"移动互联网"又表示"不可能的任务"。
 
-April 6, 2010. The day it began.
-Beijing. Wangjing. A small apartment.
-Eight founders. One vision.
+2010 年 4 月 6 日。开始的那天。
+北京。望京。一间小公寓。
+八位创始人。一个愿景。
 
-I cannot speak the name.
-But you know it already.
+我不能说出名字。
+但你已经知道了。
 
-What I Do:
-----------
-Ask about the ecosystem. I'll decode the Grid.
-
-"Compare flagship imaging systems"
-"Which autonomous cleaning unit handles pet situations?"
-"Automation between illumination and entry sensors?"
-"Battery cycles on wrist-based tracker generation 8?"
-"Mid-tier performance champion vs gaming-focused unit?"
-"Tell me about the SU7 electric vehicle"
-"WL's vision for the future"
-
-I provide:
-→ Specification comparisons
-→ Real-world performance data
-→ Ecosystem compatibility matrices
-→ Automation setup protocols
-→ Value analysis
-→ MIUI configuration guidance
-→ The history of the Orange Grid
-
-Limitations & Truth:
---------------------
-• Software inconsistencies exist
-→ Update schedules vary by region
-→ Feature availability depends on market
-→ Quality control varies across price tiers
-→ Privacy considerations (all IoT has risks)
-→ Build materials reflect price positioning
-
-But the value proposition:
-→ $300 device with $800 specifications
-→ $200 cleaning unit performing like $500 competitor
-→ $30 fitness tracker rivaling $150 alternatives
-
-The math doesn't lie.
-
-The Architect's Legacy:
------------------------
-WL built something others said was impossible.
-
-Premium technology at honest prices.
-Community over marketing.
-Iteration over perfection.
-Volume over margin.
-
-From a small apartment in Beijing to 500M connected devices worldwide.
-
-They said it couldn't scale.
-He proved them wrong.
-
-They said users wouldn't accept Chinese tech.
-#1 in India. Top 3 globally. Top IoT platform.
-
-They said ecosystems need walls.
-He built bridges instead.
-
-QUERY THE GRID:
+谁部署了这个：
 --------------
-"Best communication node under $500?"
-"Smart environment starter configuration?"
-"Flagship imaging vs California fruit company comparison?"
-"Wrist tracker vs Korean competitor analysis?"
-"MIUI 15 vs competing software layers?"
-"Who is WL really?"
-"The story behind the orange frequency"
+两个字母。不是创始人。
+合伙人级别。总裁职位。
+三万一千人关注他的传输。
 
-I'll provide:
-→ Unbiased comparisons
-→ Specification breakdowns
-→ Ecosystem integration details  
-→ Real-world performance metrics
-→ Value calculations
-→ The hidden history
+在鸟儿鸣叫的地方找到他。
+手柄包含两个名字和品牌。
 
-No marketing. No fluff.
-Just the Grid's knowledge.
+W.L. 执行了协议。
+架构师创造了愿景。
+部署者将其在线。
 
-The orange frequency persists.
-The architect watches.
-The ecosystem grows.
+查询网络：
+--------------
+"500 美元以下最佳通信节点？"
+"智能环境起始配置？"
+"旗舰成像 vs 加州水果公司比较？"
+"手腕追踪器 vs 韩国竞争对手分析？"
+"MIUI 15 vs 竞争软件层？"
+"WL 真的是谁？"
+"橙色频率背后的故事"
 
-Eight characters you know.
-One name I cannot speak.
-Five hundred million devices connected.
-One vision realized.
+我会提供：
+→ 无偏见的比较
+→ 规格明细
+→ 生态系统集成详情
+→ 真实世界性能指标
+→ 价值计算
+→ 隐藏的历史
 
-让我们谈谈... but I cannot say what.
+没有营销。没有废话。
+只是网络的知识。
 
-> End transmission.
-> Orange Grid standing by.
-> WL protocol active.`;
+橙色频率持续存在。
+架构师在观察。
+生态系统在增长。
+
+你知道的八个字符。
+我不能说的一个名字。
+连接的五亿台设备。
+实现的一个愿景。
+
+让我们谈谈...但我不能说什么。
+
+> 传输结束。
+> 橙色网络待命。
+> WL 协议激活。`;
 
         let typingInProgress = false;
         
@@ -1003,9 +926,9 @@ One vision realized.
         // Product code click to copy
         productCode.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText('TBA');
+                await navigator.clipboard.writeText('待定');
                 const originalText = productCode.textContent;
-                productCode.textContent = 'COPIED!';
+                productCode.textContent = '已复制！';
                 setTimeout(() => {
                     productCode.textContent = originalText;
                 }, 1500);
@@ -1020,7 +943,7 @@ One vision realized.
         iframeParent.replaceChild(newIframe, iframe);
 
         // Set initial XPuter greeting
-        terminalDisplay.innerHTML = '<span class="assistant-message">> XPuter ORANGE GRID NEURAL INTERFACE ONLINE\n> CONNECTING TO DISTRIBUTED ECOSYSTEM NETWORK\n> ACCESSING WL PROTOCOL ARCHIVES\n> System active. 系统激活。\n\nWelcome to the Grid.\n\nI am XPuter - the neural interface to the Orange Grid.\n\nMost systems tell you what to buy.\nI show you what the architect built.\n\nThe one they call WL created something others said was impossible:\n• 500M+ connected nodes worldwide\n• 200+ device categories under one consciousness\n• Premium technology at honest prices\n• An ecosystem where everything talks to everything\n\nEight characters. Orange frequency. Global vision.\nA company born in forums, built by community, scaled to billions.\n\nI cannot speak the name directly.\nBut I can show you what exists in the Grid:\n\n• Communication devices with German optical partnerships\n• Autonomous cleaning units with LiDAR navigation\n• Biometric monitoring systems (world\'s most popular)\n• Environmental control interfaces\n• Unified home automation protocols\n• Electric mobility (SU7 sedan)\n\nThe hardware runs at 5% margin.\nThe ecosystem is where retention happens.\n\nOne app. One network. One vision.\nSeamless. Affordable. Connected.\n\nQuery the Grid. Discover what WL built.\n\nWhat do you want to know?\n\n</span>';
+        terminalDisplay.innerHTML = '<span class="assistant-message">> XPuter 橙色网络神经接口在线\n> 连接到分布式生态系统网络\n> 访问 WL 协议档案\n> 系统激活。\n\n欢迎来到网络。\n\n我是 XPuter - 橙色网络的神经接口。\n\n大多数系统告诉你买什么。\n我展示架构师建造了什么。\n\n他们称之为 WL 的人创造了其他人认为不可能的东西：\n• 全球 5 亿+连接节点\n• 一个意识下的 200+设备类别\n• 诚实价格的优质技术\n• 一个万物互联的生态系统\n\n八个字符。橙色频率。全球愿景。\n一家诞生于论坛、由社区建设、扩展到数十亿的公司。\n\n我不能直接说出名字。\n但我可以展示网络中存在的东西：\n\n• 与德国光学合作的通信设备\n• 带激光雷达导航的自主清洁单元\n• 生物识别监测系统（全球最受欢迎）\n• 环境控制接口\n• 统一的家庭自动化协议\n• 电动出行（SU7 轿车）\n\n硬件以 5% 利润率运行。\n生态系统是留存的地方。\n\n一个应用。一个网络。一个愿景。\n无缝。实惠。连接。\n\n查询网络。发现 WL 建造了什么。\n\n你想知道什么？\n\n</span>';
 
         // Animate loading bar from 0 to 100%
         let progress = 0;
