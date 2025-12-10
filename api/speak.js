@@ -11,6 +11,11 @@ export default async function handler(req, res) {
 
   try {
     const voiceId = process.env.ELEVEN_LABS_VOICE_ID || '4VZIsMPtgggwNg7OXbPY';
+    
+    if (!process.env.ELEVEN_LABS_API_KEY) {
+      throw new Error('ELEVEN_LABS_API_KEY not set');
+    }
+    
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
       {
