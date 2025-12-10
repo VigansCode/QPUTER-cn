@@ -226,6 +226,7 @@
             transition: all 0.3s ease;
             opacity: 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
         }
         .product-code.visible {
             opacity: 1;
@@ -234,7 +235,9 @@
             background: rgba(255, 105, 0, 0.15);
             border-color: #FF6900;
             box-shadow: 0 0 20px rgba(255, 105, 0, 0.3);
-            transform: translateX(-50%) scale(1.05);
+        }
+        .product-code:active {
+            transform: translateX(-50%) scale(0.98);
         }
         .top-buttons {
             position: fixed;
@@ -455,7 +458,7 @@
         <div class="loading-percentage" id="loadingPercentage">0%</div>
     </div>
 
-    <div class="product-code" id="productCode">PROTOCOL: WL-2010 | ORANGE_GRID_v14.0</div>
+    <div class="product-code" id="productCode">CA: TBA</div>
 
     <div class="top-buttons" id="topButtons">
         <button class="top-btn" id="faqBtn">ORANGE FILES</button>
@@ -995,6 +998,20 @@ One vision realized.
                 bugForm.style.display = 'flex';
                 bugForm.reset();
             }, 2500);
+        });
+        
+        // Product code click to copy
+        productCode.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText('TBA');
+                const originalText = productCode.textContent;
+                productCode.textContent = 'COPIED!';
+                setTimeout(() => {
+                    productCode.textContent = originalText;
+                }, 1500);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
         });
         
         const iframeParent = iframe.parentNode;
