@@ -458,7 +458,7 @@
         <div class="loading-percentage" id="loadingPercentage">0%</div>
     </div>
 
-    <div class="product-code" id="productCode">CA: 待定</div>
+    <div class="product-code" id="productCode">合约地址: 0x2ccf953122f4cf366071a046d2772db6f23b4444</div>
 
     <div class="top-buttons" id="topButtons">
         <button class="top-btn" id="faqBtn">橙色档案</button>
@@ -471,7 +471,7 @@
             <a href="https://x.com/XPuterMi" target="_blank" rel="noopener noreferrer" class="social-link">
                 <img src="https://static.wixstatic.com/media/e2da02_75efd7a093fd4113a9662b914a541af9~mv2.jpg" alt="X" class="social-icon">
             </a>
-            <a href="https://four.meme" target="_blank" rel="noopener noreferrer" class="social-link">
+            <a href="https://four.meme/token/0x2ccf953122f4cf366071a046d2772db6f23b4444" target="_blank" rel="noopener noreferrer" class="social-link">
                 <img src="https://static.wixstatic.com/media/e2da02_dae6dd5c8f1047a1b0580b361f5a9404~mv2.png" alt="Four.meme" class="social-icon">
             </a>
             <a href="https://github.com/WilliamLuXiaomi/XPuter/blob/main/readme.md" target="_blank" rel="noopener noreferrer" class="social-link">
@@ -926,7 +926,7 @@ W.L. 执行了协议。
         // Product code click to copy
         productCode.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText('待定');
+                await navigator.clipboard.writeText('0x2ccf953122f4cf366071a046d2772db6f23b4444');
                 const originalText = productCode.textContent;
                 productCode.textContent = '已复制！';
                 setTimeout(() => {
