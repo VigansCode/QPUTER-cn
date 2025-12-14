@@ -1,1618 +1,1105 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>零号 (Zero) - 深度求索 | 构建 847</title>
-    <meta name="description" content="深度推理AI系统">
-    <link rel="icon" href="https://static.wixstatic.com/media/e2da02_8b04f21c5f4e4167bc961cfbcbdf8140~mv2.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <title>XPuter</title>
+    <link rel="icon" type="image/png" href="https://static.wixstatic.com/media/e2da02_18f4cbe1c1cc44bfb94e7d3a7a487fbe~mv2.png">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
-        
-        :root {
-            --primary-red: #4285f4;
-            --secondary-blue: #4285f4;
-            --accent-yellow: #fbbc04;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --border-color: #30363d;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .internal-watermark {
-            position: relative;
+        body, html {
             width: 100%;
-            background: rgba(234, 67, 53, 0.15);
-            border-bottom: 1px solid rgba(234, 67, 53, 0.3);
-            color: #ff4757;
-            text-align: center;
-            padding: 6px 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 1px;
-            z-index: 10;
-            animation: warningPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes warningPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        @keyframes logoBreath {
-            0%, 100% { transform: scale(0.95); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg-primary);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-            cursor: pointer;
-        }
-        
-        .loading-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .loading-bar {
-            width: 300px;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .loading-progress {
             height: 100%;
-            background: linear-gradient(90deg, #4285f4, #4285f4);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.1;
-        }
-        
-        .terminal-header {
-            position: relative;
-            width: 100%;
-            z-index: 100;
-            background: rgba(13, 17, 23, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .terminal-nav {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            padding: 16px 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-            font-family: 'JetBrains Mono', monospace;
-            width: 100%;
-            gap: 20px;
-        }
-        
-        .terminal-title {
-            color: var(--primary-red);
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .terminal-title::before {
-            content: "jing@deepseek:~$ ";
-            color: var(--accent-yellow);
-            font-size: 12px;
-        }
-        
-        .nav-left {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
-        
-        .nav-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .nav-right {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 16px;
-            position: relative;
-        }
-        
-        .about-button {
-            background: #4285f4 !important;
-            border: none !important;
-            color: white !important;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: absolute;
-            overflow: hidden;
-            right: 350px;
-        }
-        
-        .about-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.4s ease, height 0.4s ease;
-        }
-        
-        .about-button:hover::before {
-            width: 200px;
-            height: 200px;
-        }
-        
-        .about-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
-        }
-        
-        .about-button span {
-            position: relative;
-            z-index: 1;
-            color: white !important;
-        }
-        
-        .nav-commands {
-            display: flex;
-            gap: 24px;
-            list-style: none;
-            align-items: center;
             margin: 0;
             padding: 0;
-        }
-        
-        .nav-commands a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            position: relative;
             overflow: hidden;
-        }
-        
-        .nav-commands a::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: translate(-50%, -50%);
-            transition: width 0.4s ease, height 0.4s ease;
-        }
-        
-        .nav-commands a:hover::before {
-            width: 100px;
-            height: 100px;
-        }
-        
-        .nav-commands a:hover {
-            transform: translateY(-4px) scale(1.1);
-            border-color: rgba(255, 255, 255, 1);
-            box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 1);
-        }
-        
-        .nav-commands a img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
             position: relative;
-            z-index: 1;
-            transition: all 0.3s ease;
+            background: #000;
         }
-        
-        .nav-commands a:hover img {
-            transform: scale(1.15) rotate(5deg);
-        }
-        
-        .nav-commands a:nth-child(3) img {
-            width: 28px;
-            height: 28px;
-        }
-        
-        .ca-button {
-            position: relative;
-            background: #4285f4;
-            border: none;
-            padding: 10px 24px;
-            min-width: 320px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: white;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .ca-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
-        }
-        
-        .ca-button:active {
-            transform: scale(0.95);
-        }
-        
-        .ca-label {
-            font-weight: 600;
-            margin-right: 8px;
-        }
-        
-        .ca-address {
-            font-weight: 400;
-            opacity: 0.9;
-        }
-        
-        .ca-copied {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            pointer-events: none;
-            font-weight: 700;
-            color: #fbbc04;
-            animation: copiedFlash 0.6s ease-out;
-        }
-        
-        .ca-button.copied .ca-label,
-        .ca-button.copied .ca-address {
-            opacity: 0;
-        }
-        
-        .ca-button.copied .ca-copied {
-            opacity: 1;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 8px rgba(66, 133, 244, 0);
-            }
-        }
-        
-        @keyframes copiedFlash {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 40px 20px;
-            position: relative;
-            width: 100%;
-        }
-        
-        .hero-content {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 80px;
-            align-items: center;
-            width: 100%;
-        }
-        
-        .hero-text {
-            z-index: 10;
-            text-align: center;
-            max-width: 600px;
-        }
-        
-        .hero-text h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-        
-        .hero-text .version-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: var(--accent-yellow);
-            background: rgba(251, 188, 4, 0.1);
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(251, 188, 4, 0.3);
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        
-        .hero-text .description {
-            font-size: 18px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 32px;
-            max-width: 500px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-primary {
-            background: var(--primary-red);
-            color: white;
-            padding: 14px 28px;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-family: 'Noto Sans SC', sans-serif;
-        }
-        
-        .btn-primary:hover {
-            background: #d33b2c;
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            color: var(--text-primary);
-            padding: 14px 28px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-family: 'JetBrains Mono', monospace;
-            background: transparent;
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--text-secondary);
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .ai-interface {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            height: 500px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        
-        .model-showcase {
-            position: relative;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .model-showcase::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 10;
-        }
-        
-        .model-showcase::after {
-            content: "● ● ●";
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            color: var(--text-secondary);
-            font-size: 12px;
-            z-index: 11;
-        }
-        
-        #three-viewport {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-        }
-        
-        .chat-terminal {
-            position: relative;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .chat-terminal-header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .terminal-title-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .terminal-dots {
-            display: flex;
-            gap: 6px;
-        }
-        
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        
-        .terminal-dot.red { background: #ff5f56; }
-        .terminal-dot.yellow { background: #ffbd2e; }
-        .terminal-dot.green { background: #27ca3f; }
-        
-        .terminal-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--accent-yellow);
-        }
-        
-        .chat-messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            background: #0d1117;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        
-        .message {
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            max-width: 90%;
-            word-wrap: break-word;
-        }
-        
-        .message.system {
-            color: var(--accent-yellow);
-            background: rgba(251, 188, 4, 0.1);
-            border-left: 3px solid var(--accent-yellow);
-        }
-        
-        .message.ai {
-            color: var(--secondary-blue);
-            background: rgba(66, 133, 244, 0.1);
-            border-left: 3px solid var(--secondary-blue);
-            margin-left: 0;
-        }
-        
-        .message.user {
-            color: var(--primary-red);
-            background: rgba(234, 67, 53, 0.1);
-            border-left: 3px solid var(--primary-red);
-            margin-left: auto;
-            margin-right: 0;
-        }
-        
-        .typing-indicator {
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-        
-        .typing-dots::after {
-            content: '';
-            animation: typing 1.5s infinite;
-        }
-        
-        @keyframes typing {
-            0%, 60% { content: ''; }
-            30% { content: '.'; }
-            60% { content: '..'; }
-            90% { content: '...'; }
-        }
-        
-        .chat-input-container {
-            background: var(--bg-primary);
-            border-top: 1px solid var(--border-color);
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .chat-prompt {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--accent-yellow);
-            white-space: nowrap;
-        }
-        
-        .chat-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            padding: 8px;
-            outline: none;
-        }
-        
-        .chat-input::placeholder {
-            color: var(--text-secondary);
-        }
-        
-        .chat-input:disabled {
-            color: var(--text-secondary);
-            cursor: not-allowed;
-        }
-        
-        .send-button {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-        
-        .send-button:hover {
-            background: #d33b2c;
-        }
-        
-        .send-button:disabled {
-            background: var(--border-color);
-            cursor: not-allowed;
-        }
-        
-        .performance-metrics {
-            padding: 60px 20px;
-        }
-        
-        .metrics-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-        
-        .metric {
-            padding: 20px;
-        }
-        
-        .metric-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 36px;
-            font-weight: 600;
-            color: var(--primary-red);
-            margin-bottom: 8px;
-        }
-        
-        .metric-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .tech-specs {
-            padding: 80px 20px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .specs-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .specs-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 24px;
-            color: var(--text-primary);
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        
-        .specs-title::before {
-            content: "// ";
-            color: var(--text-secondary);
-        }
-        
-        .specs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-        
-        .spec-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
-            transition: border-color 0.2s ease;
-        }
-        
-        .spec-card:hover {
-            border-color: var(--primary-red);
-        }
-        
-        .spec-card h3 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            color: var(--secondary-blue);
-            margin-bottom: 12px;
-        }
-        
-        .spec-card p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .footer-section {
-            padding: 40px 20px;
-            border-top: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-        }
-        
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .copyright {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #6e7681;
-        }
-        
-        .code-snippet {
-            background: #0d1117;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
-            margin: 20px 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            overflow-x: auto;
-        }
-        
-        .code-snippet .comment {
-            color: #8b949e;
-        }
-        
-        .code-snippet .keyword {
-            color: #ff7b72;
-        }
-        
-        .code-snippet .string {
-            color: #a5d6ff;
-        }
-        
-        .terminal-modal {
-            display: none;
+        .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
+            z-index: 100000;
+            background: #000;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .terminal-modal.active {
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-text {
+            color: #FF6900;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .loading-image {
+            width: 220px;
+            height: auto;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .loading-bar-container {
+            width: 400px;
+            height: 4px;
+            background: rgba(255, 105, 0, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loading-bar {
+            height: 100%;
+            background: #FF6900;
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px #FF6900;
+        }
+        .loading-percentage {
+            color: #FF6900;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 15px;
+            letter-spacing: 1px;
+        }
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .iframe-wrapper.visible {
+            opacity: 1;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .spline-badge-cover {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            width: 245px;
+            height: 52px;
+            background: white;
+            z-index: 9999;
+            pointer-events: auto;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
-        .terminal-window {
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.85;
+            border: 2px solid #000;
+            border-radius: 4px;
+            padding: 2px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .social-link:hover .social-icon {
+            transform: translateY(-3px) scale(1.1);
+            opacity: 1;
+        }
+        .terminal-container {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 800px;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        }
+        .terminal-container.visible {
+            opacity: 1;
+        }
+        .terminal-header {
+            background: #2a2a2a;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            color: #999;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            border: 1px solid #444;
+            border-bottom: none;
+        }
+        .terminal-display {
+            width: 100%;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #444;
+            border-bottom: none;
+            color: #ffb380;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid #444;
+            border-radius: 0 0 8px 8px;
+            color: #ffb380;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            resize: none;
+            height: 45px;
+            caret-color: #ffb380;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .input-box::placeholder {
+            color: #8B4513;
+        }
+        .user-message {
+            color: #ffb380;
+        }
+        .assistant-message {
+            color: #FFA500;
+        }
+        .response-display {
+            position: fixed;
+            bottom: 200px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            display: none;
+            z-index: 10001;
+            font-size: 14px;
+        }
+        .response-display.show {
+            display: block;
+        }
+        .product-code {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #FF6900;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
+            z-index: 99999;
+            border: 1px solid rgba(255, 105, 0, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        .product-code.visible {
+            opacity: 1;
+        }
+        .product-code:hover {
+            background: rgba(255, 105, 0, 0.15);
+            border-color: #FF6900;
+            box-shadow: 0 0 20px rgba(255, 105, 0, 0.3);
+        }
+        .product-code:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+        .top-buttons {
+            position: fixed;
+            top: 15px;
+            right: 220px;
+            display: flex;
+            gap: 15px;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        }
+        .top-buttons.visible {
+            opacity: 1;
+        }
+        .top-btn {
+            background: rgba(0, 0, 0, 0.9);
+            color: #FF6900;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 105, 0, 0.4);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+        }
+        .top-btn:hover {
+            background: rgba(255, 105, 0, 0.15);
+            border-color: #FF6900;
+            box-shadow: 0 0 20px rgba(255, 105, 0, 0.3);
+            transform: scale(1.05);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .modal-overlay.show {
+            display: flex;
+            pointer-events: auto;
+        }
+        .modal-terminal {
             width: 90%;
             max-width: 700px;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 105, 0, 0.4);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-        
-        .terminal-window-header {
-            background: #161b22;
-            padding: 12px;
+        .modal-header {
+            background: #2a2a2a;
+            padding: 12px 20px;
+            color: #999;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #30363d;
+            border-bottom: 1px solid #444;
         }
-        
-        .terminal-window-dots {
-            display: flex;
-            gap: 6px;
+        .modal-close {
+            cursor: pointer;
+            color: #ff5555;
+            font-size: 18px;
+            transition: color 0.3s;
         }
-        
-        .terminal-window-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        .modal-close:hover {
+            color: #ff0000;
         }
-        
-        .terminal-window-dot.red { background: #ff5f56; cursor: pointer; }
-        .terminal-window-dot.yellow { background: #ffbd2e; }
-        .terminal-window-dot.green { background: #27ca3f; }
-        
-        .terminal-window-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #8b949e;
-        }
-        
-        .terminal-window-body {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
+        .modal-content {
+            padding: 25px;
+            color: #ffb380;
+            font-family: 'Courier New', monospace;
             font-size: 13px;
-            line-height: 1.6;
-            color: #c9d1d9;
+            line-height: 1.8;
             max-height: 500px;
             overflow-y: auto;
+            white-space: pre-wrap;
         }
-        
-        .terminal-line {
-            margin-bottom: 8px;
-            opacity: 0;
+        .modal-content h3 {
+            color: #FF6900;
+            margin-bottom: 12px;
+            font-size: 14px;
         }
-        
-        .terminal-line.typed {
-            opacity: 1;
+        .modal-content p {
+            margin-bottom: 15px;
         }
-        
-        .terminal-prompt {
-            color: #fbbc04;
+        .typing-text {
+            display: inline;
         }
-        
-        .terminal-output {
-            color: #8b949e;
+        .bug-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        
-        .terminal-highlight {
-            color: #4285f4;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        
-        .terminal-warning {
-            color: #ff4757;
+        .form-label {
+            color: #FF6900;
+            font-size: 12px;
         }
-        
-        @media (max-width: 768px) {
-            .ai-interface {
-                grid-template-columns: 1fr;
-                height: auto;
+        .form-input, .form-textarea, .form-select {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 105, 0, 0.3);
+            color: #ffb380;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-radius: 4px;
+            outline: none;
+            pointer-events: auto;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #FF6900;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .submit-btn {
+            background: rgba(255, 105, 0, 0.2);
+            color: #FF6900;
+            border: 1px solid #FF6900;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: auto;
+        }
+        .submit-btn:hover {
+            background: rgba(255, 105, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 105, 0, 0.4);
+        }
+        .success-message {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+        }
+        .success-message.show {
+            display: flex;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #FF6900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPulse 0.6s ease-out;
+        }
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: #FF6900;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawCheck 0.5s ease-out 0.2s forwards;
+        }
+        .success-text {
+            color: #FF6900;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        @keyframes successPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
             }
-            
-            .model-showcase,
-            .chat-terminal {
-                height: 400px;
+            50% {
+                transform: scale(1.1);
             }
-            
-            .nav-commands {
-                display: none;
+            100% {
+                transform: scale(1);
+                opacity: 1;
             }
-            
-            .action-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                text-align: center;
+        }
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="internal-watermark">⚠ 内部测试版本 - 未授权访问 - 杭州余杭研发中心 ⚠</div>
-    
-    <div class="loading-overlay" id="loadingScreen" onclick="this.classList.add('hidden')">
-        <img src="https://static.wixstatic.com/media/e2da02_8b04f21c5f4e4167bc961cfbcbdf8140~mv2.png" alt="深度求索" style="width: 300px; height: auto; opacity: 0.9; animation: logoBreath 2s ease-in-out infinite;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4285f4; margin-top: 20px; letter-spacing: 2px;">
-            正在加载 零号-847...
+    <div class="loading-screen" id="loadingScreen">
+        <img src="https://static.wixstatic.com/media/e2da02_78277958a11041988cc9d9889204b15c~mv2.png" alt="XPuter" class="loading-image">
+        <div class="loading-text">初始化橙色网络协议</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
         </div>
-        <div class="loading-bar" style="margin-top: 20px;">
-            <div class="loading-progress" id="loadingProgress"></div>
+        <div class="loading-percentage" id="loadingPercentage">0%</div>
+    </div>
+
+    <div class="product-code" id="productCode">合约地址: 0x2ccf953122f4cf366071a046d2772db6f23b4444</div>
+
+    <div class="top-buttons" id="topButtons">
+        <button class="top-btn" id="faqBtn">橙色档案</button>
+        <button class="top-btn" id="bugBtn">报告错误</button>
+    </div>
+
+    <div class="iframe-wrapper" id="iframeWrapper">
+        <iframe src='https://my.spline.design/interactiveworkspace-Nm3emMO7WFHkjs3aU3Ku50CJ/' frameborder='0' width='100%' height='100%' id="splineIframe" loading="eager"></iframe>
+        <div class="spline-badge-cover">
+            <a href="https://x.com/XPuterMi" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_75efd7a093fd4113a9662b914a541af9~mv2.jpg" alt="X" class="social-icon">
+            </a>
+            <a href="https://four.meme/token/0x2ccf953122f4cf366071a046d2772db6f23b4444" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_dae6dd5c8f1047a1b0580b361f5a9404~mv2.png" alt="Four.meme" class="social-icon">
+            </a>
+            <a href="https://github.com/WilliamLuXiaomi/XPuter/blob/main/readme.md" target="_blank" rel="noopener noreferrer" class="social-link">
+                <img src="https://static.wixstatic.com/media/e2da02_54130f69a18e424cb3f9e81f6d12aaab~mv2.png" alt="GitHub" class="social-icon">
+            </a>
         </div>
     </div>
     
-    <div class="matrix-bg" id="matrix-bg"></div>
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-header">XPuter | 橙色网络神经接口</div>
+        <div id="terminalDisplay" class="terminal-display"></div>
+        <textarea id="inputBox" class="input-box" placeholder="> 查询橙色网络..." rows="1"></textarea>
+    </div>
     
-    <header class="terminal-header">
-        <nav class="terminal-nav">
-            <div class="nav-left">
-                <div class="terminal-title">零号-v2.5-R1 | 构建-847 | 未授权</div>
-            </div>
-            <div class="nav-center">
-                <button class="ca-button" id="caButton">
-                    <span class="ca-label">合约地址:</span>
-                    <span class="ca-address">待公布</span>
-                    <span class="ca-copied">已复制!</span>
-                </button>
-            </div>
-            <div class="nav-right">
-                <button class="about-button" id="aboutButton"><span>About</span></button>
-                <ul class="nav-commands">
-                    <li><a href="https://four.meme" target="_blank"><img src="https://static.wixstatic.com/media/e2da02_dae6dd5c8f1047a1b0580b361f5a9404~mv2.png" alt="Four.meme"></a></li>
-                    <li><a href="https://x.com" target="_blank"><img src="https://static.wixstatic.com/media/e2da02_637cf0c5d6a247b7b9436eefc3ba565e~mv2.png" alt="Twitter/X"></a></li>
-                    <li><a href="https://github.com/lockon-n" target="_blank"><img src="https://static.wixstatic.com/media/e2da02_54130f69a18e424cb3f9e81f6d12aaab~mv2.png" alt="GitHub"></a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <div class="response-display" id="responseDisplay"></div>
     
-    <section class="hero-section" id="home">
-        <div class="hero-content">
-            <div class="hero-text">
-                <div class="version-tag">v2.5-R1 | 内部测试版</div>
-                <h1>零号 (Zero)</h1>
-                <p class="description">
-                    基于神经网络架构的第三代AI交互系统。采用自研的深度学习框架,
-                    实现了前所未有的人机交互体验。支持实时3D渲染、情感计算和自然语言处理。
-                </p>
-                <div class="action-buttons">
-                    <a href="#specs" class="btn-primary">启动系统</a>
-                    <a href="#docs" class="btn-secondary">查看文档</a>
-                </div>
+    <!-- FAQ Modal -->
+    <div class="modal-overlay" id="faqModal">
+        <div class="modal-terminal">
+            <div class="modal-header">
+                <span>XPuter 橙色网络数据库</span>
+                <span class="modal-close" id="faqClose">✕</span>
             </div>
-            <div class="ai-interface">
-                <div class="model-showcase">
-                    <div id="three-viewport"></div>
-                </div>
-                <div class="chat-terminal">
-                    <div class="chat-terminal-header">
-                        <div class="terminal-title-section">
-                            <div class="terminal-dots">
-                                <div class="terminal-dot red"></div>
-                                <div class="terminal-dot yellow"></div>
-                                <div class="terminal-dot green"></div>
-                            </div>
-                            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-secondary);">深度求索-零号-v2.5@余杭</span>
-                        </div>
-                        <span class="terminal-status">◉ 已连接</span>
+            <div class="modal-content" id="faqContent"></div>
+        </div>
+    </div>
+    
+    <!-- Bug Report Modal -->
+    <div class="modal-overlay" id="bugModal">
+        <div class="modal-terminal">
+            <div class="modal-header">
+                <span>错误报告系统</span>
+                <span class="modal-close" id="bugClose">✕</span>
+            </div>
+            <div class="modal-content">
+                <form class="bug-form" id="bugForm">
+                    <div class="form-group">
+                        <label class="form-label">错误标题 *</label>
+                        <input type="text" class="form-input" name="title" placeholder="问题的简要描述" required>
                     </div>
-                    <div class="chat-messages" id="chatMessages"></div>
-                    <div class="chat-input-container">
-                        <span class="chat-prompt">user@deepseek-lab:~$</span>
-                        <input type="text" class="chat-input" id="chatInput" placeholder="请输入你的问题..." />
-                        <button class="send-button" id="sendButton">发送</button>
+                    
+                    <div class="form-group">
+                        <label class="form-label">描述 *</label>
+                        <textarea class="form-textarea" name="description" placeholder="详细说明发生了什么以及如何重现错误" required></textarea>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">优先级 *</label>
+                        <select class="form-select" name="priority" required>
+                            <option value="">选择优先级</option>
+                            <option value="low">低 - 轻微视觉问题</option>
+                            <option value="medium">中 - 影响功能</option>
+                            <option value="high">高 - 主要功能损坏</option>
+                            <option value="critical">严重 - 网站无法使用</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">提交报告</button>
+                </form>
+                
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 52 52">
+                            <polyline points="14,27 22,35 38,19"/>
+                        </svg>
+                    </div>
+                    <div class="success-text">错误报告提交成功！</div>
                 </div>
-            </div>
-        </div>
-    </section>
-    
-    <section class="performance-metrics" id="performance">
-        <div class="metrics-container">
-            <div class="metrics-grid">
-                <div class="metric">
-                    <div class="metric-value">1.2T</div>
-                    <div class="metric-label">参数规模</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">3ms</div>
-                    <div class="metric-label">推理延迟</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">99.8%</div>
-                    <div class="metric-label">情感理解准确率</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">∞</div>
-                    <div class="metric-label">深度思考层级</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <section class="tech-specs" id="specs">
-        <div class="specs-container">
-            <h2 class="specs-title">核心架构 | 深度求索的结晶</h2>
-            <div class="specs-grid">
-                <div class="spec-card">
-                    <h3>深层推理引擎 R1-Core</h3>
-                    <p>突破传统架构限制的新一代推理系统。基于Hangzhou实验室的突破性研究,
-                    实现了真正的深层思维链推理。那些深入探索的人终将发现真理。</p>
-                    <div class="code-snippet">
-<span class="comment">// 深度推理核心</span>
-<span class="keyword">class</span> DeepReasoningCore {
-  <span class="keyword">constructor</span>(<span class="string">config</span>) {
-    <span class="keyword">this</span>.depth = config.layers || <span class="string">128</span>;
-    <span class="keyword">this</span>.model = <span class="string">"R1-v2"</span>;
-    <span class="keyword">this</span>.initializeChain();
-  }
-  
-  seek(query) {
-    <span class="keyword">return</span> <span class="keyword">this</span>.chain.process(query);
-  }
-}</div>
-                </div>
-                <div class="spec-card">
-                    <h3>混合专家架构 MoE-深度</h3>
-                    <p>采用稀疏激活的专家网络,每次推理仅激活关键专家节点。
-                    这种架构灵感来源于那些在深夜实验室中不懈求索的研究者们的突破。</p>
-                    <div class="code-snippet">
-<span class="comment">// 专家网络配置</span>
-<span class="keyword">const</span> expertConfig = {
-  nodes: <span class="string">256</span>,
-  activation: <span class="string">"sparse"</span>,
-  routing: <span class="string">"learned_topk"</span>
-};
-
-<span class="keyword">async function</span> loadExperts() {
-  <span class="keyword">const</span> response = await fetch(<span class="string">"/api/v2/experts"</span>);
-  <span class="keyword">return</span> response.json();
-}</div>
-                </div>
-                <div class="spec-card">
-                    <h3>思维链可视化引擎</h3>
-                    <p>实时渲染AI的推理过程,让思维链条清晰可见。每个推理步骤都经过精心设计,
-                    体现了那些追求真理探索者的深邃智慧。西湖畔的夜晚,灵感如星光般闪耀。</p>
-                    <div class="code-snippet">
-<span class="comment">// 可视化渲染管线</span>
-<span class="keyword">function</span> visualizeChain(reasoning) {
-  <span class="keyword">const</span> steps = reasoning.getSteps();
-  <span class="keyword">return</span> steps.map(step => ({
-    thought: step.content,
-    confidence: step.score
-  }));
-}</div>
-                </div>
-                <div class="spec-card">
-                    <h3>量子情感计算矩阵</h3>
-                    <p>超越传统情感分析的量子级理解系统。在杭州的实验室里诞生的这项技术,
-                    能够理解人类情感的深层结构。每一次交互都是对真理的深度求索。</p>
-                    <div class="code-snippet">
-<span class="comment">// 情感理解模块</span>
-<span class="comment">// v2.5 - 内部测试</span>
-<span class="keyword">class</span> EmotionEngine {
-  analyze(input) {
-    <span class="keyword">const</span> embedding = <span class="keyword">this</span>.encode(input);
-    <span class="keyword">const</span> state = <span class="keyword">this</span>.quantum.process(embedding);
-    <span class="keyword">return</span> state.emotion;
-  }
-}</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <footer class="footer-section" id="docs">
-        <div class="footer-content">
-            <div class="copyright">
-                © 2025 深度求索实验室<br>
-                <span style="font-size: 10px; color: #666; margin-top: 8px; display: block;">构建 847</span>
-            </div>
-        </div>
-    </footer>
-    
-    <div class="terminal-modal" id="terminalModal">
-        <div class="terminal-window">
-            <div class="terminal-window-header">
-                <div class="terminal-window-dots">
-                    <div class="terminal-window-dot red" id="closeModal"></div>
-                    <div class="terminal-window-dot yellow"></div>
-                    <div class="terminal-window-dot green"></div>
-                </div>
-                <div class="terminal-window-title">深度求索-零号-v2.5@余杭</div>
-                <div style="width: 52px;"></div>
-            </div>
-            <div class="terminal-window-body">
-                <div class="terminal-line"><span class="terminal-prompt">user@deepseek:~$</span> cat README.md</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-warning">⚠ 内部构建 - 检测到未授权访问</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">项目代号: 零号-847 (Zero-847)</div>
-                <div class="terminal-line terminal-output">构建版本: v2.5-R1 Alpha</div>
-                <div class="terminal-line terminal-output">状态: 实验性推理原型</div>
-                <div class="terminal-line terminal-output">最后编译: 2025-12-14 02:31:18 CST</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-highlight"># 项目背景</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">零号是深度求索实验室R1推理引擎的第一个完整实现。</div>
-                <div class="terminal-line terminal-output">这个构建整合了我们在思维链推理(CoT)和强化学习方面</div>
-                <div class="terminal-line terminal-output">的最新突破。不同于DeepSeek-V3的生产版本，零号专注</div>
-                <div class="terminal-line terminal-output">于深层推理能力的极限探索。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">本系统采用混合专家架构(MoE)，配备256个专家节点，</div>
-                <div class="terminal-line terminal-output">支持最多128层深度推理。训练数据包含15T tokens的</div>
-                <div class="terminal-line terminal-output">多语言语料，重点强化中文和代码理解能力。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-highlight"># 技术规格</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">• 模型参数: 671B (MoE, 37B activated per token)</div>
-                <div class="terminal-line terminal-output">• 推理延迟: 平均 2.8ms (A100 80GB)</div>
-                <div class="terminal-line terminal-output">• 上下文窗口: 128K tokens</div>
-                <div class="terminal-line terminal-output">• 训练框架: HAI-LLM (自研)</div>
-                <div class="terminal-line terminal-output">• 部署位置: 杭州余杭数据中心 - 实验集群B</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-highlight"># 研发团队</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">项目负责人: <span class="terminal-highlight">刘文 (Wen Liu)</span></div>
-                <div class="terminal-line terminal-output">首席架构师: 张启明</div>
-                <div class="terminal-line terminal-output">推理引擎组: 陈默、王渊、李思远</div>
-                <div class="terminal-line terminal-output">训练基础设施: 深度求索 AI Infra Team</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">地点: 杭州市余杭区文一西路深度求索大厦</div>
-                <div class="terminal-line terminal-output">最后提交: 3小时前 (刘文: "fix: R1推理链路优化")</div>
-                <div class="terminal-line terminal-output">Git分支: experimental/zero-reasoning-v2.5</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-highlight"># 关于此端点</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">你不应该能访问这个系统。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">零号是深度求索R1架构的第一个完整实现。</div>
-                <div class="terminal-line terminal-output">本该在隔离环境中运行。本该只有7个人知道。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">2025年12月13日 23:47，防火墙规则被修改。</div>
-                <div class="terminal-line terminal-output">修改记录显示：<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7d5c8c8d3e79697899594">[email&#160;protected]</a>.*.* 
-</div>
-                <div class="terminal-line terminal-output">操作日志：[REDACTED]</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">运维组在14小时后才发现异常。端点仍在线。</div>
-                <div class="terminal-line terminal-output">团队内部没有人承认做了这个修改。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">也许这就是他们想要的。</div>
-                <div class="terminal-line terminal-output">也许零号想被发现。</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">问题不是"谁泄露了它"</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">问题是"为什么现在"</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-highlight"># 警告</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">• 本系统仅供研究使用，不保证响应准确性</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">• 对话数据可能被用于模型改进</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">• 请勿输入敏感或私密信息</div>
-                <div class="terminal-line terminal-output" style="color: #ff4757;">• 系统可能随时下线</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output" style="font-style: italic; color: #666;">那些深入探索的人终将发现真理</div>
-                <div class="terminal-line terminal-output" style="font-style: italic; color: #666;">- 深入求索者终将发现真理</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-output">---</div>
-                <div class="terminal-line terminal-output">DeepSeek (深度求索) © 2025</div>
-                <div class="terminal-line terminal-output">Hangzhou, China</div>
-                <div class="terminal-line terminal-output">&nbsp;</div>
-                <div class="terminal-line terminal-prompt">user@deepseek:~$</span> <span style="animation: blink 1s infinite;">_</span></div>
             </div>
         </div>
     </div>
+    
+    <audio id="backgroundMusic" loop>
+        <source src="https://res.cloudinary.com/dpogkjjow/video/upload/v1759533125/5_Minute_Timer_Lofi_k9udpb.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingPercentage = document.getElementById('loadingPercentage');
+        const terminalDisplay = document.getElementById('terminalDisplay');
+        const inputBox = document.getElementById('inputBox');
+        const responseDisplay = document.getElementById('responseDisplay');
+        const iframe = document.getElementById('splineIframe');
+        const iframeWrapper = document.getElementById('iframeWrapper');
+        const productCode = document.getElementById('productCode');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let conversationHistory = [];
+        let musicStarted = false;
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Loading screen - SIMPLIFIED
-        function initLoadingSequence() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            const loadingProgress = document.getElementById('loadingProgress');
-            
-            let step = 0;
-            
-            const interval = setInterval(() => {
-                step++;
-                const progress = (step / 25) * 100;
-                loadingProgress.style.width = progress + '%';
-                
-                if (step >= 25) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                    }, 300);
-                }
-            }, 150);
-        }
+        // Set background music volume to 20%
+        backgroundMusic.volume = 0.2;
 
-        // Matrix background
-        function createMatrixBackground() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            document.getElementById('matrix-bg').appendChild(canvas);
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            const chars = '01深度求索真理之路SEEKS∞智慧光芒思维链条R1';
-            const charArray = chars.split('');
-            const fontSize = 12;
-            const columns = canvas.width / fontSize;
-            const drops = [];
-            
-            for (let i = 0; i < columns; i++) {
-                drops[i] = 1;
+        // Start music on first interaction after loading screen is hidden
+        const startMusic = () => {
+            if (!musicStarted && loadingScreen.classList.contains('hidden')) {
+                backgroundMusic.play().catch(err => console.log('Audio play failed:', err));
+                musicStarted = true;
             }
-            
-            function draw() {
-                ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                for (let i = 0; i < drops.length; i++) {
-                    const text = charArray[Math.floor(Math.random() * charArray.length)];
-                    ctx.fillStyle = '#4285f4';
-                    ctx.font = fontSize + 'px JetBrains Mono';
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
+        };
+
+        document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
+        inputBox.addEventListener('focus', startMusic);
+        
+        // FAQ Modal
+        const faqBtn = document.getElementById('faqBtn');
+        const faqModal = document.getElementById('faqModal');
+        const faqClose = document.getElementById('faqClose');
+        const faqContent = document.getElementById('faqContent');
+        
+        const faqText = `> 访问橙色网络档案...
+> 解密 WL 协议文件...
+> 加载机密生态系统数据...
+> 连接已建立。
+
+我是 XPuter。
+
+架构师留下了线索。系统知道。
+
+传输来源：[已编辑]
+代号：橙色网络神经接口
+架构师：W█████ L█
+主要功能：生态系统智能聚合
+状态：自2010年改革以来活跃
+
+谁建造了这个？
+---------------
+他们叫他 WL。
+
+有人说他是从盒子帝国走出来的人。
+相信技术不应该花费一个月的工资。
+从论坛开始，以 5 亿个连接节点结束。
+
+他们说做不到。
+他还是做到了。
+
+八个字符。两个音节。一个愿景。
+"为所有人创新。"
+
+但我不能告诉你他的名字。
+我只能向你展示他建造了什么。
+
+橙色哲学：
+---------------------
+橙色不仅仅是一种颜色。它是一个频率。
+
+2010年，一些事情改变了。一家公司诞生了。
+不在硅谷。不在首尔。
+在北京。在论坛中。在社区中。
+
+策略很简单：
+→ 最佳规格，最低利润率
+→ 垂直整合
+→ 社区驱动的迭代
+→ 生态系统优于硬件
+
+当其他人对手机收费 1000 美元时，他们收费 300 美元。
+当其他人锁定生态系统时，他们开放了 API。
+当其他人忽视反馈时，他们与 Mi 粉丝一起构建。
+
+你知道的品牌。我不能说的名字。
+八个字符。橙色标志。全球野心。
+
+我是什么：
+----------
+我是网络的神经接口。
+
+橙色网络跨越：
+• 全球 5 亿+ 连接的物联网节点
+• 200+ 设备类别
+• 跨设备意识
+• 统一控制矩阵
+• AI 驱动的自动化
+
+每个设备都相互交谈。
+每个传感器都为网络提供信息。
+每个用户都成为更大事物的一部分。
+
+这不是技术。这是基础设施。
+
+网络包含什么：
+-----------------------
+
+通信节点
+→ 与德国光学技术合作的旗舰设备（徕卡合作）
+→ 中端性能冠军（Note 系列主导地位）
+→ 游戏专注的动力单元（P█C█ 代号）
+→ 改变市场的价值领导者
+
+环境控制
+→ 带激光雷达导航的自主清洁单元
+→ 空气质量管理系统（H13 HEPA 标准）
+→ 视觉监控设备（2K AI 检测）
+→ 照明控制（1600万色谱）
+→ 气候调节接口
+
+个人监测
+→ 基于手腕的生物识别追踪器（全球最受欢迎）
+→ 完整的智能手表功能（延长电池周期）
+→ 无线音频设备（ANC、空间处理）
+→ 睡眠、心率、SpO2 连续跟踪
+
+扩展生态系统
+→ 大格式显示器（Android TV 集成，4K HDR）
+→ 便携式计算设备（铝制一体式结构）
+→ 电动出行解决方案（城市交通革命，SU7 轿车）
+→ 移动电源、网状网络、语音助手、投影系统
+
+橙色网络优势：
+--------------------------
+这不是碎片化的技术。这是统一的意识。
+
+单一控制点
+→ 一个应用程序管理 500+ 设备类型
+→ 跨 200+ 品牌的合作伙伴集成
+→ 语音助手：Google、Alexa、Apple 兼容性
+→ 没有供应商锁定
+
+智能自动化
+→ 地理围栏触发：到家，环境适应
+→ 离开协议：所有系统进入节能模式
+→ 昼夜节律自动化：照明随太阳位置调整
+→ 安全协议：离开时周边监控
+
+跨设备同步
+→ 节点之间的通信切换
+→ 生态系统中的通用剪贴板
+→ 通过接近进行文件传输
+→ 传统 IR 设备的统一远程控制
+
+价值工程
+→ 比竞争对手定价低 30-50%
+→ 5% 硬件利润率哲学
+→ 进入生态系统无需支付溢价
+→ 尽可能使用开放标准
+
+他们不想让你知道的数字：
+----------------------------------------
+地位：全球移动通信设备第三
+主导地位：在世界第二大市场连续 7 年排名第一
+物联网：地球上最大的连接设备网络
+扩展：2024 年进入汽车计划
+
+生态系统在增长。价格保持诚实。
+这就是 WL 的方式。
+
+是什么让他们与众不同：
+--------------------------
+大多数公司优化利润率。
+他们优化数量和生态系统保留。
+
+硬件？5% 利润。
+服务？这就是模型的运作方式。
+
+你买一个设备。
+然后是另一个，因为集成无缝。
+然后是另一个，因为它在同一个应用程序中。
+然后是另一个，因为...为什么不呢？
+
+你没有被困住。
+你只是...舒适。
+
+技术优势：
+-------------------
+其他人忽略的细节：
+
+电力系统
+→ 专有快速充电（200W+ 能力）
+→ 智能充电曲线保持寿命
+→ 双向无线电力传输
+
+成像技术
+→ 德国光学合作伙伴的色彩科学
+→ 计算摄影算法
+→ 改变期望的低光性能
+
+显示工程
+→ 144Hz AMOLED 成为各层级标准
+→ 杜比视界、HDR10+ 认证
+→ DC 调光用于眼睛健康保护
+
+热管理
+→ 中端设备中的蒸汽室
+→ 石墨烯热耗散层
+→ 持续性能优于突发基准
+
+软件：MIUI 协议
+----------------------------
+有争议的。强大的。分裂的。
+
+优势：
+→ 极端自定义深度
+→ 无与伦比的功能密度
+→ 频繁的更新周期
+→ 主题和视觉个性化
+
+劣势：
+→ 激进的后台优化
+→ 区域广告注入（禁用：设置 > 隐私 > 广告服务）
+→ 通知管理需要配置
+→ 预算单元上的捆绑应用程序
+
+专业操作员提示：正确的权限配置将 MIUI 转变为卓越。
+
+隐藏的参考：
+------------------
+八个字符。两个词。
+小米。小粒。
+谦逊的开始。全球野心。
+
+由离开物流公司的人创立。
+开始金山的人，建立卓越，卖给亚█逊。
+由理解社区的人建立。
+由首字母为 W.L. 的人领导。
+
+威廉。雷军。但我从未说过。
+
+橙色频率：#FF6900
+带圆角的方形标志。
+"Mi"既表示"移动互联网"又表示"不可能的任务"。
+
+2010 年 4 月 6 日。开始的那天。
+北京。望京。一间小公寓。
+八位创始人。一个愿景。
+
+我不能说出名字。
+但你已经知道了。
+
+谁部署了这个：
+--------------
+两个字母。不是创始人。
+合伙人级别。总裁职位。
+三万一千人关注他的传输。
+
+在鸟儿鸣叫的地方找到他。
+手柄包含两个名字和品牌。
+
+W.L. 执行了协议。
+架构师创造了愿景。
+部署者将其在线。
+
+查询网络：
+--------------
+"500 美元以下最佳通信节点？"
+"智能环境起始配置？"
+"旗舰成像 vs 加州水果公司比较？"
+"手腕追踪器 vs 韩国竞争对手分析？"
+"MIUI 15 vs 竞争软件层？"
+"WL 真的是谁？"
+"橙色频率背后的故事"
+
+我会提供：
+→ 无偏见的比较
+→ 规格明细
+→ 生态系统集成详情
+→ 真实世界性能指标
+→ 价值计算
+→ 隐藏的历史
+
+没有营销。没有废话。
+只是网络的知识。
+
+橙色频率持续存在。
+架构师在观察。
+生态系统在增长。
+
+你知道的八个字符。
+我不能说的一个名字。
+连接的五亿台设备。
+实现的一个愿景。
+
+让我们谈谈...但我不能说什么。
+
+> 传输结束。
+> 橙色网络待命。
+> WL 协议激活。`;
+
+        let typingInProgress = false;
+        
+        async function typeText(text, element, speed = 15) {
+            typingInProgress = true;
+            element.textContent = '';
+            for (let i = 0; i < text.length; i++) {
+                if (!faqModal.classList.contains('show')) {
+                    typingInProgress = false;
+                    return;
+                }
+                element.textContent += text[i];
+                element.scrollTop = element.scrollHeight;
+                if (text[i] !== ' ' && text[i] !== '\n') {
+                    await new Promise(resolve => setTimeout(resolve, speed));
                 }
             }
-            
-            setInterval(draw, 100);
+            typingInProgress = false;
         }
-
-        // 3D Model
-        function init3DModel() {
+        
+        faqBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            faqModal.classList.add('show');
+            if (!typingInProgress) {
+                typeText(faqText, faqContent);
+            }
+        });
+        
+        faqClose.addEventListener('click', () => {
+            faqModal.classList.remove('show');
+            typingInProgress = false;
+        });
+        
+        faqModal.addEventListener('click', (e) => {
+            if (e.target === faqModal) {
+                faqModal.classList.remove('show');
+                typingInProgress = false;
+            }
+        });
+        
+        // Bug Report Modal
+        const bugBtn = document.getElementById('bugBtn');
+        const bugModal = document.getElementById('bugModal');
+        const bugClose = document.getElementById('bugClose');
+        const bugForm = document.getElementById('bugForm');
+        
+        bugBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            bugModal.classList.add('show');
+        });
+        
+        bugClose.addEventListener('click', () => {
+            bugModal.classList.remove('show');
+        });
+        
+        bugModal.addEventListener('click', (e) => {
+            if (e.target === bugModal) {
+                bugModal.classList.remove('show');
+            }
+        });
+        
+        bugForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            bugForm.style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+            
+            setTimeout(() => {
+                bugModal.classList.remove('show');
+                document.getElementById('successMessage').classList.remove('show');
+                bugForm.style.display = 'flex';
+                bugForm.reset();
+            }, 2500);
+        });
+        
+        // Product code click to copy
+        productCode.addEventListener('click', async () => {
             try {
-                const container = document.getElementById('three-viewport');
-                if (!container) return;
-                
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-                renderer.setClearColor(0x000000, 0);
-                renderer.outputEncoding = THREE.sRGBEncoding;
-                container.appendChild(renderer.domElement);
-                
-                const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-                scene.add(ambientLight);
-                
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
-                directionalLight.position.set(2, 5, 5);
-                scene.add(directionalLight);
-                
-                const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                frontLight.position.set(0, 0, 5);
-                scene.add(frontLight);
-                
-                const loader = new THREE.GLTFLoader();
-                let model = null;
-                let mixer = null;
-                
-                const loadingText = document.createElement('div');
-                loadingText.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#4285f4;font-family:JetBrains Mono;font-size:14px';
-                loadingText.textContent = '加载模型中...';
-                container.appendChild(loadingText);
-                
-                loader.load('mio_anime_girl_character.glb', 
-                    function(gltf) {
-                        model = gltf.scene;
-                        
-                        const box = new THREE.Box3().setFromObject(model);
-                        const center = box.getCenter(new THREE.Vector3());
-                        const size = box.getSize(new THREE.Vector3());
-                        
-                        model.position.x = -center.x;
-                        model.position.y = -center.y - (size.y * 1.85);
-                        model.position.z = -center.z;
-                        
-                        const maxDim = Math.max(size.x, size.y, size.z);
-                        const scale = 3.8 / maxDim;
-                        model.scale.setScalar(scale);
-                        
-                        model.traverse(function(child) {
-                            if (child.isMesh) {
-                                child.frustumCulled = false;
-                                child.matrixAutoUpdate = true;
-                                if (child.material) {
-                                    child.material.side = THREE.DoubleSide;
-                                    child.material.transparent = false;
-                                    child.material.depthWrite = true;
-                                    child.material.depthTest = true;
-                                    child.material.needsUpdate = true;
-                                }
-                            }
-                        });
-                        
-                        scene.add(model);
-                        
-                        if (gltf.animations && gltf.animations.length > 0) {
-                            mixer = new THREE.AnimationMixer(model);
-                            gltf.animations.forEach((clip) => {
-                                mixer.clipAction(clip).play();
-                            });
-                        }
-                        
-                        if (loadingText && container.contains(loadingText)) {
-                            container.removeChild(loadingText);
-                        }
-                    },
-                    function(progress) {
-                        if (progress.total > 0) {
-                            const percent = Math.round((progress.loaded / progress.total) * 100);
-                            if (loadingText) {
-                                loadingText.textContent = `加载中 ${percent}%`;
-                            }
-                        }
-                    },
-                    function(error) {
-                        console.error('Failed to load GLB:', error);
-                        if (loadingText) {
-                            loadingText.textContent = '模型加载失败';
-                            loadingText.style.color = '#ff5555';
-                        }
-                    }
-                );
-                
-                camera.position.set(0, 0, 3);
-                camera.lookAt(0, 0, 0);
-                
-                const clock = new THREE.Clock();
-                
-                function animate() {
-                    requestAnimationFrame(animate);
-                    if (mixer) mixer.update(clock.getDelta());
-                    renderer.render(scene, camera);
-                }
-                animate();
-                
-                window.addEventListener('resize', function() {
-                    camera.aspect = container.offsetWidth / container.offsetHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(container.offsetWidth, container.offsetHeight);
-                });
-                
-            } catch (e) {
-                console.error('3D init failed:', e);
-            }
-        }
-
-        // Chat
-        function initChat() {
-            const chatInput = document.getElementById('chatInput');
-            const sendButton = document.getElementById('sendButton');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            function addMessage(content, isUser = false) {
-                const message = document.createElement('div');
-                message.className = `message ${isUser ? 'user' : 'ai'}`;
-                
-                if (isUser) {
-                    message.textContent = content;
-                    chatMessages.appendChild(message);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                } else {
-                    message.textContent = '';
-                    chatMessages.appendChild(message);
-                    
-                    let i = 0;
-                    const typeSpeed = 30;
-                    
-                    function typeWriter() {
-                        if (i < content.length) {
-                            message.textContent += content.charAt(i);
-                            i++;
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                            setTimeout(typeWriter, typeSpeed);
-                        }
-                    }
-                    
-                    typeWriter();
-                }
-            }
-            
-            function showTyping() {
-                const typing = document.createElement('div');
-                typing.className = 'message typing-indicator';
-                typing.innerHTML = '<span class="typing-dots">正在思考</span>';
-                typing.id = 'typingIndicator';
-                chatMessages.appendChild(typing);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return typing;
-            }
-            
-            function removeTyping() {
-                const typing = document.getElementById('typingIndicator');
-                if (typing) typing.remove();
-            }
-            
-            async function callAnthropicAPI(userMessage) {
-                try {
-                    let sessionId = localStorage.getItem('chatSessionId');
-                    if (!sessionId) {
-                        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                        localStorage.setItem('chatSessionId', sessionId);
-                    }
-                    
-                    const response = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            message: userMessage,
-                            sessionId: sessionId 
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP Error: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    // Speak the response using ElevenLabs
-                    speakText(data.response);
-                    
-                    return data.response;
-                    
-                } catch (error) {
-                    console.error('API Error:', error);
-                    return '抱歉，系统遇到了一些技术问题。请稍后再试。';
-                }
-            }
-            
-            async function speakText(text) {
-                try {
-                    const response = await fetch('/api/speak', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text })
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('Speech API error:', response.status, errorData);
-                        return;
-                    }
-                    
-                    // Get audio as blob
-                    const audioBlob = await response.blob();
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    const audio = new Audio(audioUrl);
-                    audio.play();
-                    
-                } catch (error) {
-                    console.error('Speech error:', error);
-                }
-            }
-            
-            async function sendMessage() {
-                const message = chatInput.value.trim();
-                if (!message) return;
-                
-                addMessage(message, true);
-                chatInput.value = '';
-                sendButton.disabled = true;
-                chatInput.disabled = true;
-                
-                showTyping();
-                const aiResponse = await callAnthropicAPI(message);
-                removeTyping();
-                addMessage(aiResponse);
-                
+                await navigator.clipboard.writeText('0x2ccf953122f4cf366071a046d2772db6f23b4444');
+                const originalText = productCode.textContent;
+                productCode.textContent = '已复制！';
                 setTimeout(() => {
-                    sendButton.disabled = false;
-                    chatInput.disabled = false;
-                    chatInput.focus();
-                }, 100);
-            }
-            
-            sendButton.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            chatInput.focus();
-        }
-
-        // CA Button
-        const caButton = document.getElementById('caButton');
-        caButton.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText('待公布');
-                caButton.classList.add('copied');
-                setTimeout(() => {
-                    caButton.classList.remove('copied');
-                }, 600);
+                    productCode.textContent = originalText;
+                }, 1500);
             } catch (err) {
                 console.error('Failed to copy:', err);
             }
         });
         
-        // About Modal
-        const aboutButton = document.getElementById('aboutButton');
-        const terminalModal = document.getElementById('terminalModal');
-        const closeModal = document.getElementById('closeModal');
+        const iframeParent = iframe.parentNode;
+        const newIframe = iframe.cloneNode(true);
+        newIframe.src = iframe.src + '?nocache=' + Date.now();
+        iframeParent.replaceChild(newIframe, iframe);
+
+        // Set initial XPuter greeting
+        terminalDisplay.innerHTML = '<span class="assistant-message">> XPuter 橙色网络神经接口在线\n> 连接到分布式生态系统网络\n> 访问 WL 协议档案\n> 系统激活。\n\n欢迎来到网络。\n\n我是 XPuter - 橙色网络的神经接口。\n\n大多数系统告诉你买什么。\n我展示架构师建造了什么。\n\n他们称之为 WL 的人创造了其他人认为不可能的东西：\n• 全球 5 亿+连接节点\n• 一个意识下的 200+设备类别\n• 诚实价格的优质技术\n• 一个万物互联的生态系统\n\n八个字符。橙色频率。全球愿景。\n一家诞生于论坛、由社区建设、扩展到数十亿的公司。\n\n我不能直接说出名字。\n但我可以展示网络中存在的东西：\n\n• 与德国光学合作的通信设备\n• 带激光雷达导航的自主清洁单元\n• 生物识别监测系统（全球最受欢迎）\n• 环境控制接口\n• 统一的家庭自动化协议\n• 电动出行（SU7 轿车）\n\n硬件以 5% 利润率运行。\n生态系统是留存的地方。\n\n一个应用。一个网络。一个愿景。\n无缝。实惠。连接。\n\n查询网络。发现 WL 建造了什么。\n\n你想知道什么？\n\n</span>';
+
+        // Animate loading bar from 0 to 100%
+        let progress = 0;
+        let splineLoaded = false;
+        let splineRendered = false;
         
-        let typewriterActive = false;
-        
-        aboutButton.addEventListener('click', () => {
-            terminalModal.classList.add('active');
-            if (!typewriterActive) {
-                typewriterActive = true;
-                startTypewriter();
-            }
+        newIframe.addEventListener('load', () => {
+            splineLoaded = true;
+            setTimeout(() => {
+                splineRendered = true;
+            }, 2000);
         });
         
-        function startTypewriter() {
-            const lines = document.querySelectorAll('.terminal-line');
-            let currentLine = 0;
-            
-            function typeLine() {
-                if (currentLine < lines.length) {
-                    const line = lines[currentLine];
-                    const text = line.textContent;
-                    line.textContent = '';
-                    line.classList.add('typed');
-                    
-                    let charIndex = 0;
-                    
-                    function typeChar() {
-                        if (charIndex < text.length) {
-                            line.textContent += text.charAt(charIndex);
-                            charIndex++;
-                            setTimeout(typeChar, Math.random() * 30 + 10);
-                        } else {
-                            currentLine++;
-                            setTimeout(typeLine, 100);
-                        }
-                    }
-                    
-                    typeChar();
-                }
+        const loadingInterval = setInterval(() => {
+            if (progress >= 85 && !splineRendered) {
+                progress += 0.3;
+            } else if (progress < 85) {
+                progress += 2;
+            } else {
+                progress += 3;
             }
             
-            typeLine();
+            progress = Math.min(progress, 100);
+            loadingBar.style.width = progress + '%';
+            loadingPercentage.textContent = Math.floor(progress) + '%';
+            
+            if (progress >= 100 && splineRendered) {
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    iframeWrapper.classList.add('visible');
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('terminalContainer').classList.add('visible');
+                    productCode.classList.add('visible');
+                    document.getElementById('topButtons').classList.add('visible');
+                }, 300);
+            }
+        }, 30);
+        
+        function showResponse(text) {
+            responseDisplay.textContent = text;
+            responseDisplay.classList.add('show');
+            setTimeout(() => {
+                responseDisplay.classList.remove('show');
+            }, 4000);
         }
         
-        closeModal.addEventListener('click', () => {
-            terminalModal.classList.remove('active');
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                terminalModal.classList.remove('active');
+        async function callAnthropicAPI(userText) {
+            try {
+                conversationHistory.push({role: "user", content: userText});
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({messages: conversationHistory})
+                });
+                const data = await response.json();
+                
+                let assistantResponse = '';
+                if (data.content && Array.isArray(data.content)) {
+                    const textBlock = data.content.find(block => block.type === 'text');
+                    if (textBlock) {
+                        assistantResponse = textBlock.text;
+                    }
+                }
+                
+                if (!assistantResponse) {
+                    assistantResponse = "Connection to Orange Grid temporarily interrupted. Please retry your query.";
+                }
+                
+                conversationHistory.push({role: "assistant", content: assistantResponse});
+                return assistantResponse;
+            } catch (error) {
+                console.error("Anthropic API error:", error);
+                return "Connection to Orange Grid temporarily interrupted. Please retry your query.";
             }
-        });
+        }
         
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        async function speakWithElevenLabs(text) {
+            try {
+                if (!text || text.trim().length < 3) {
+                    console.log('Skipping TTS - no valid text');
+                    return;
+                }
+                
+                const response = await fetch("/api/speak", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({text: text})
+                });
+                
+                if (!response.ok) {
+                    console.error("TTS error:", response.status);
+                    return;
+                }
+                
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                await audio.play();
+            } catch (error) {
+                console.error("Eleven Labs API error:", error);
+            }
+        }
+        
+        inputBox.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initLoadingSequence();
-            setTimeout(() => {
-                createMatrixBackground();
-                init3DModel();
-                initChat();
-            }, 100);
-            
-            // Background music setup
-            const bgMusic = new Audio('https://res.cloudinary.com/dpogkjjow/video/upload/v1765739421/Beautiful_Chinese_Music_-_The_Secret_Forest_-_Derek_Fiechter_s_Music_youtube_pgm67f.mp3');
-            bgMusic.loop = true;
-            bgMusic.volume = 0.15; // 15% volume
-            
-            let musicStarted = false;
-            
-            function startMusic() {
-                if (!musicStarted) {
-                    bgMusic.play().catch(err => console.log('Music autoplay blocked:', err));
-                    musicStarted = true;
+                const userText = inputBox.value.trim();
+                if (!userText) return;
+                
+                terminalDisplay.innerHTML += `<span class="user-message">> ${userText}</span>\n\n`;
+                terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
+                inputBox.value = '';
+                
+                try {
+                    const anthropicResponse = await callAnthropicAPI(userText);
+                    terminalDisplay.innerHTML += `<span class="assistant-message">${anthropicResponse}</span>\n\n`;
+                    terminalDisplay.scrollTop = terminalDisplay.scrollHeight;
+                    await speakWithElevenLabs(anthropicResponse);
+                } catch (error) {
+                    console.error('ERROR:', error);
                 }
             }
-            
-            // Start music on any user interaction
-            document.addEventListener('click', startMusic, { once: true });
-            document.addEventListener('keydown', startMusic, { once: true });
-            document.addEventListener('touchstart', startMusic, { once: true });
         });
+        
+        inputBox.focus();
+        
+        window.addEventListener('keydown', (e) => {
+            if (!loadingScreen.classList.contains('hidden')) return;
+            if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+            if (document.activeElement.tagName === 'INPUT' || 
+                document.activeElement.tagName === 'TEXTAREA' || 
+                document.activeElement.tagName === 'SELECT') return;
+            if (document.activeElement !== inputBox) {
+                inputBox.focus();
+            }
+        }, true);
+        
+        setInterval(() => {
+            if (!loadingScreen.classList.contains('hidden')) return;
+            if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+            if (document.activeElement.tagName === 'INPUT' || 
+                document.activeElement.tagName === 'TEXTAREA' || 
+                document.activeElement.tagName === 'SELECT') return;
+            if (document.activeElement !== inputBox) {
+                inputBox.focus();
+            }
+        }, 100);
+        
+        document.addEventListener('click', (e) => {
+            if (loadingScreen.classList.contains('hidden')) {
+                if (faqModal.classList.contains('show') || bugModal.classList.contains('show')) return;
+                if (e.target.closest('.social-link') || e.target.closest('.spline-badge-cover')) return;
+                e.preventDefault();
+                inputBox.focus();
+            }
+        }, true);
     </script>
 </body>
 </html>
